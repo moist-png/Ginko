@@ -180,7 +180,7 @@ export const PortalView: React.FC<{ token: string }> = ({ token }) => {
             <TreePine size={20} color="var(--leaf)" />
           </div>
           <div>
-            <div style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)' }}>ArborPro</div>
+            <div style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)' }}>Ginko</div>
             <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Client Portal</div>
           </div>
         </div>
@@ -239,7 +239,7 @@ export const PortalView: React.FC<{ token: string }> = ({ token }) => {
         )}
 
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px', textAlign: 'center', fontSize: '12px', color: 'var(--text-muted)' }}>
-          Powered by ArborPro
+          Powered by Ginko
         </div>
       </main>
 

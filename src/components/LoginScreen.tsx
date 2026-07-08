@@ -77,7 +77,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
           <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'linear-gradient(135deg, var(--canopy), var(--forest-light))', border: '1px solid var(--border-bright)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
             <TreePine size={32} color="var(--leaf)" />
           </div>
-          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '28px', color: 'var(--text-primary)', marginBottom: '6px', letterSpacing: '-0.02em' }}>ArborPro</h1>
+          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '28px', color: 'var(--text-primary)', marginBottom: '6px', letterSpacing: '-0.02em' }}>Ginko</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Professional arborist management platform</p>
         </div>
 

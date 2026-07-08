@@ -6,7 +6,8 @@ import { NotesSection } from './NotesSection';
 import { ReportPreview } from './ReportPreview';
 import { ClinometerTool } from './ClinometerTool';
 import { SpeciesIdentifier } from './SpeciesIdentifier';
-import { ArrowLeft, Save, FileText, Camera, TreePine, StickyNote, Eye, Download, Ruler, Leaf } from 'lucide-react';
+import { TreeChlorophyllTab } from './TreeChlorophyllTab';
+import { ArrowLeft, Save, FileText, Camera, TreePine, StickyNote, Eye, Download, Ruler, Leaf, Activity } from 'lucide-react';
 import { exportSingleTreeReport } from '../utils/exportUtils';
 import { canUserEdit } from '../utils/auth';
 import { ExportModal } from './ExportModal';
@@ -21,7 +22,7 @@ interface ReportEditorProps {
 
 export const ReportEditor: React.FC<ReportEditorProps> = ({ report, onSave, onBack }) => {
   const initial = fromDbReport(report);
-  const [activeTab, setActiveTab] = useState<'info' | 'tree' | 'species' | 'height' | 'photos' | 'notes' | 'preview'>(initial.siteId ? 'tree' : 'info');
+  const [activeTab, setActiveTab] = useState<'info' | 'tree' | 'species' | 'height' | 'photos' | 'notes' | 'chlorophyll' | 'preview'>(initial.siteId ? 'tree' : 'info');
   const [editingReport, setEditingReport] = useState<ArboristReport>(initial);
   const [showExportModal, setShowExportModal] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -63,6 +64,7 @@ export const ReportEditor: React.FC<ReportEditorProps> = ({ report, onSave, onBa
     { id: 'tree', label: 'Tree Data', icon: TreePine },
     { id: 'species', label: 'Identify Species', icon: Leaf },
     { id: 'height', label: 'Measure Height', icon: Ruler },
+    { id: 'chlorophyll', label: 'Chlorophyll', icon: Activity },
     { id: 'photos', label: 'Photos', icon: Camera },
     { id: 'notes', label: 'Notes', icon: StickyNote }
   ];
@@ -271,6 +273,15 @@ export const ReportEditor: React.FC<ReportEditorProps> = ({ report, onSave, onBa
               treeData={editingReport.treeData}
               readOnly={!canEdit}
               onUpdate={updateTreeData}
+            />
+          )}
+
+          {activeTab === 'chlorophyll' && (
+            <TreeChlorophyllTab
+              treeId={editingReport.id}
+              treeSpecies={editingReport.treeData.species || editingReport.treeData.commonName || editingReport.title}
+              treeLocation={editingReport.treeData.location || editingReport.address}
+              readOnly={!canEdit}
             />
           )}
 

@@ -48,7 +48,7 @@ export const InviteJoin: React.FC<InviteJoinProps> = ({ code }) => {
           <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'linear-gradient(135deg, var(--canopy), var(--forest-light))', border: '1px solid var(--border-bright)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <TreePine size={32} color="var(--leaf)" />
           </div>
-          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '26px', color: 'var(--text-primary)' }}>You're invited to ArborPro</h1>
+          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '26px', color: 'var(--text-primary)' }}>You're invited to Ginko</h1>
         </div>
         <div style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: '16px', padding: '32px' }}>
           {children}

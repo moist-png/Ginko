@@ -7,8 +7,6 @@ import { Dashboard } from './components/Dashboard';
 import { TeamManagement } from './components/TeamManagement';
 import { ReportList } from './components/ReportList';
 import { ReportEditor } from './components/ReportEditor';
-import { ChlorophyllList } from './components/ChlorophyllList';
-import { ChlorophyllEditor } from './components/ChlorophyllEditor';
 import { SiteList } from './components/SiteList';
 import { SiteEditor } from './components/SiteEditor';
 import { SiteDetailScreen } from './components/SiteDetailScreen';
@@ -24,13 +22,13 @@ import { InviteJoin } from './components/InviteJoin';
 import { MessageBoard } from './components/MessageBoard';
 import { NotificationBell } from './components/NotificationBell';
 import { db, getPendingCount, syncQueue } from './utils/offline';
-import { fromDbSite, fromDbReport, fromDbJob, fromDbQuote, fromDbRisk, fromDbChlorophyll } from './utils/mappers';
+import { fromDbSite, fromDbReport, fromDbJob, fromDbQuote, fromDbRisk } from './utils/mappers';
 import {
-  Home, Leaf, TreePine, Shield, FileText, Menu, X,
-  LogOut, Trash2, Users, LayoutDashboard, RefreshCw, Wifi, WifiOff, MessageSquare
+  Home, TreePine, Shield, FileText, Menu, X,
+  LogOut, Trash2, Users, LayoutDashboard, WifiOff, MessageSquare
 } from 'lucide-react';
 
-type AppView = 'dashboard' | 'sites' | 'chlorophyll' | 'jobs' | 'daily-risk' | 'quotes' | 'team' | 'board';
+type AppView = 'dashboard' | 'sites' | 'jobs' | 'daily-risk' | 'quotes' | 'team' | 'board';
 
 // Check if we're on a portal URL
 const getPortalToken = () => {
@@ -53,7 +51,6 @@ function App() {
   const [sitesSubView, setSitesSubView] = useState<'sites' | 'registry'>('sites');
   const [siteDetailSubView, setSiteDetailSubView] = useState<'trees' | 'work-done'>('trees');
   const [selectedReport, setSelectedReport] = useState<any>(null);
-  const [selectedReading, setSelectedReading] = useState<any>(null);
   const [selectedSite, setSelectedSite] = useState<any>(null);
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [selectedRisk, setSelectedRisk] = useState<any>(null);
@@ -70,7 +67,6 @@ function App() {
   const [jobs, setJobs] = useState<any[]>([]);
   const [quotes, setQuotes] = useState<any[]>([]);
   const [risks, setRisks] = useState<any[]>([]);
-  const [readings, setReadings] = useState<any[]>([]);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
 
   // Check for portal URL first
@@ -109,13 +105,12 @@ function App() {
   }, [session]);
 
   const loadCoreData = async () => {
-    const [sitesRes, reportsRes, jobsRes, quotesRes, risksRes, readingsRes, teamRes] = await Promise.all([
+    const [sitesRes, reportsRes, jobsRes, quotesRes, risksRes, teamRes] = await Promise.all([
       supabase.from('sites').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
       supabase.from('reports').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
       supabase.from('jobs').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
       supabase.from('quotes').select('*').order('updated_at', { ascending: false }),
       supabase.from('daily_risks').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
-      supabase.from('chlorophyll_readings').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
       supabase.from('team_members').select('*').order('name'),
     ]);
     if (teamRes.data) setTeamMembers(teamRes.data as TeamMember[]);
@@ -124,14 +119,13 @@ function App() {
     if (jobsRes.data) setJobs(jobsRes.data.map(fromDbJob));
     if (quotesRes.data) setQuotes(quotesRes.data.map(fromDbQuote));
     if (risksRes.data) setRisks(risksRes.data.map(fromDbRisk));
-    if (readingsRes.data) setReadings(readingsRes.data.map(fromDbChlorophyll));
   };
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: 'var(--forest)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
         <TreePine size={32} color="var(--leaf)" style={{ margin: '0 auto 12px' }} />
-        <p style={{ fontSize: '14px' }}>Loading ArborPro...</p>
+        <p style={{ fontSize: '14px' }}>Loading Ginko...</p>
       </div>
     </div>
   );
@@ -147,7 +141,7 @@ function App() {
     if (view === 'team') { setCurrentView('team'); }
     else setCurrentView(view as AppView);
     setSearchQuery('');
-    setSelectedReport(null); setSelectedReading(null); setSelectedSite(null);
+    setSelectedReport(null); setSelectedSite(null);
     setSelectedJob(null); setSelectedRisk(null); setSelectedQuote(null);
     setEditingSite(null); setIsNewItem(false); setIsMobileMenuOpen(false);
   };
@@ -161,7 +155,6 @@ function App() {
   const navItems = [
     { view: 'dashboard' as AppView, icon: LayoutDashboard, label: 'Dashboard' },
     { view: 'sites' as AppView, icon: Home, label: 'Sites' },
-    { view: 'chlorophyll' as AppView, icon: Leaf, label: 'Chlorophyll' },
     { view: 'jobs' as AppView, icon: TreePine, label: 'Jobs' },
     { view: 'daily-risk' as AppView, icon: Shield, label: 'Risk' },
     { view: 'quotes' as AppView, icon: FileText, label: 'Quotes' },
@@ -191,7 +184,6 @@ function App() {
 
   // Full-screen editor views
   if (selectedReport) return <ReportEditor report={selectedReport} onSave={r => { setSelectedReport(null); loadCoreData(); }} onBack={() => setSelectedReport(null)} />;
-  if (selectedReading) return <ChlorophyllEditor reading={selectedReading} onSave={() => { setSelectedReading(null); loadCoreData(); }} onDelete={() => { setSelectedReading(null); loadCoreData(); }} onBack={() => setSelectedReading(null)} isNew={isNewItem} allReadings={readings} />;
   if (editingSite) return <SiteEditor site={editingSite} onSave={s => { setEditingSite(null); setIsNewItem(false); loadCoreData(); if (isNewItem) setSelectedSite(s); }} onDelete={() => { setEditingSite(null); setSelectedSite(null); loadCoreData(); }} onBack={() => { setEditingSite(null); setIsNewItem(false); }} isNew={isNewItem} />;
   if (selectedJob) return <JobEditor job={selectedJob} teamMembers={teamMembers} onSave={() => { setSelectedJob(null); loadCoreData(); }} onDelete={() => { setSelectedJob(null); loadCoreData(); }} onBack={() => setSelectedJob(null)} isNew={isNewItem} />;
   if (selectedRisk) return <DailyRiskEditor risk={selectedRisk} onSave={() => { setSelectedRisk(null); loadCoreData(); }} onDelete={() => { setSelectedRisk(null); loadCoreData(); }} onBack={() => setSelectedRisk(null)} isNew={isNewItem} />;
@@ -224,7 +216,7 @@ function App() {
               <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'linear-gradient(135deg, var(--canopy), var(--forest-light))', border: '1px solid var(--border-bright)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <TreePine size={20} color="var(--leaf)" />
               </div>
-              <span style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>ArborPro</span>
+              <span style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>Ginko</span>
             </div>
 
             <nav className="hidden md:flex" style={{ gap: '4px' }}>
@@ -236,12 +228,14 @@ function App() {
             </nav>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              {/* Sync status */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', background: online ? 'rgba(90,143,90,0.1)' : 'rgba(180,60,60,0.1)', border: `1px solid ${online ? 'rgba(90,143,90,0.2)' : 'rgba(180,60,60,0.2)'}`, color: online ? 'var(--leaf)' : '#e88' }}>
-                {online ? <Wifi size={12} /> : <WifiOff size={12} />}
-                <span className="hidden md:inline">{online ? 'Online' : 'Offline'}</span>
-                {pendingSync > 0 && <span style={{ background: 'var(--amber)', color: 'var(--forest)', borderRadius: '999px', padding: '1px 5px', fontSize: '10px' }}>{pendingSync}</span>}
-              </div>
+              {/* Unsynced-data badge — only shown when offline or there are
+                  operations still waiting to sync. Nothing appears when all is well. */}
+              {(!online || pendingSync > 0) && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', background: 'rgba(180,60,60,0.1)', border: '1px solid rgba(180,60,60,0.2)', color: '#e88' }} title={online ? `${pendingSync} change(s) waiting to sync` : 'Offline — changes will sync when reconnected'}>
+                  <WifiOff size={12} />
+                  {pendingSync > 0 && <span style={{ background: 'var(--amber)', color: 'var(--forest)', borderRadius: '999px', padding: '1px 5px', fontSize: '10px' }}>{pendingSync}</span>}
+                </div>
+              )}
 
               <button onClick={() => setShowRecentlyDeleted(true)} className="hidden md:flex" style={{ alignItems: 'center', padding: '7px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-muted)', cursor: 'pointer' }} title="Recently Deleted">
                 <Trash2 size={15} />
@@ -254,7 +248,7 @@ function App() {
                   <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--canopy), var(--forest-light))', border: '1px solid var(--border-bright)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--leaf)' }}>{(session.user.email || 'U').charAt(0).toUpperCase()}</span>
                   </div>
-                  <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 10px', borderRadius: '6px', fontSize: '12px', color: 'var(--text-muted)', background: 'transparent', border: '1px solid transparent', cursor: 'pointer' }} title="Logout">
+                  <button onClick={handleLogout} className="hidden md:flex" style={{ alignItems: 'center', gap: '6px', padding: '6px 10px', borderRadius: '6px', fontSize: '12px', color: 'var(--text-muted)', background: 'transparent', border: '1px solid transparent', cursor: 'pointer' }} title="Logout">
                     <LogOut size={14} />
                   </button>
                 </div>
@@ -308,7 +302,6 @@ function App() {
           </div>
         )}
 
-        {currentView === 'chlorophyll' && <ChlorophyllList readings={readings} onSelectReading={setSelectedReading} onCreateReading={() => { setSelectedReading({ id: crypto.randomUUID(), tree_id: crypto.randomUUID(), tree_species: '', tree_location: '', tree_maturity: 'Juvenile', date: new Date().toISOString().split('T')[0], chlorophyll_level: 0, extension_growth: 0, notes: '', created_at: new Date().toISOString(), updated_at: new Date().toISOString() }); setIsNewItem(true); }} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
 
         {currentView === 'jobs' && <JobList jobs={jobs} teamMembers={teamMembers} onSelectJob={setSelectedJob} onCreateJob={() => { setSelectedJob({ id: crypto.randomUUID(), title: '', client_name: '', location: '', date: new Date().toISOString().split('T')[0], start_time: '', end_time: '', time_spent: 0, work_completed: '', work_to_complete: '', notes: '', status: 'scheduled', job_type: 'assessment', hourly_rate: 0, total_cost: 0, assigned_to: [], created_at: new Date().toISOString(), updated_at: new Date().toISOString() }); setIsNewItem(true); }} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
 
