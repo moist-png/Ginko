@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { Quote, LineItem } from '../types';
-import { ArrowLeft, Save, Trash2, Plus, Clock, Archive, Download, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Save, Trash2, Plus, Clock, Archive, Download, ExternalLink, Users } from 'lucide-react';
 import { exportSingleQuote } from '../utils/exportUtils';
 import { XeroIntegration } from './XeroIntegration';
 import { ExportModal } from './ExportModal';
+import { BoardThread } from './BoardThread';
 import { db } from '../utils/offline';
-import { supabase } from '../utils/supabase';
+import { supabase, TeamMember } from '../utils/supabase';
 import { fromDbQuote, toDbQuote } from '../utils/mappers';
+import { notifyAssignment } from '../utils/notifications';
 
 interface QuoteEditorProps {
   quote: Quote;
+  teamMembers: TeamMember[];
   onSave: (quote: Quote) => void;
   onDelete?: (quoteId: string) => void;
   onArchive?: (quoteId: string) => void;
@@ -19,6 +22,7 @@ interface QuoteEditorProps {
 
 export const QuoteEditor: React.FC<QuoteEditorProps> = ({
   quote,
+  teamMembers,
   onSave,
   onDelete,
   onArchive,
@@ -36,13 +40,29 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
     setSaving(true);
     setSaveError('');
     try {
+      const previousAssigned = quote.assignedTo || [];
       await db.upsert('quotes', toDbQuote(editingQuote));
+      const newlyAssigned = (editingQuote.assignedTo || []).filter(id => !previousAssigned.includes(id));
+      if (newlyAssigned.length > 0) {
+        await notifyAssignment(teamMembers, newlyAssigned, {
+          title: `Assigned to quote: ${editingQuote.clientName || 'Unnamed Client'}`,
+          linkType: 'quote', linkId: editingQuote.id,
+        });
+      }
       onSave(editingQuote);
     } catch (err: any) {
       setSaveError(err?.message || 'Could not save. Check your connection and try again.');
     } finally {
       setSaving(false);
     }
+  };
+
+  const toggleAssignee = (id: string) => {
+    setEditingQuote(prev => {
+      const current = prev.assignedTo || [];
+      const next = current.includes(id) ? current.filter(x => x !== id) : [...current, id];
+      return { ...prev, assignedTo: next };
+    });
   };
 
   const handleDelete = async () => {
@@ -337,6 +357,42 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
             </div>
           </div>
 
+          {/* Assigned To */}
+          <div className="bg-[var(--surface-raised)] rounded-lg shadow-md p-6">
+            <div className="flex items-center gap-2 mb-6">
+              <Users className="text-[var(--leaf)]" size={24} />
+              <h2 className="text-xl font-semibold">Assigned To</h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {teamMembers.filter(m => m.active).length === 0 && (
+                <p className="text-xs text-[var(--text-muted)]">No active team members yet — add some on the Team page.</p>
+              )}
+              {teamMembers.filter(m => m.active).map(member => {
+                const selected = (editingQuote.assignedTo || []).includes(member.id);
+                return (
+                  <button
+                    key={member.id}
+                    type="button"
+                    onClick={() => toggleAssignee(member.id)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '999px',
+                      fontSize: '13px', fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
+                      background: selected ? member.colour + '26' : 'transparent',
+                      border: `1px solid ${selected ? member.colour : 'var(--border)'}`,
+                      color: selected ? 'var(--text-primary)' : 'var(--text-muted)',
+                    }}
+                  >
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: member.colour, flexShrink: 0 }} />
+                    {member.name}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-xs text-[var(--text-muted)] mt-2">
+              {(editingQuote.assignedTo || []).length === 0 ? 'Unassigned — visible to the whole team until someone is picked.' : 'Assigned people are notified when you save.'}
+            </p>
+          </div>
+
           {/* Quote Status */}
           <div className="bg-[var(--surface-raised)] rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-6">Quote Status</h2>
@@ -371,6 +427,12 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
               </div>
             </div>
           </div>
+
+          {!isNew && (
+            <div className="bg-[var(--surface-raised)] rounded-lg shadow-md p-6">
+              <BoardThread contextType="quote" contextId={editingQuote.id} teamMembers={teamMembers} notifyTitle={`New comment on quote: ${editingQuote.clientName || 'Unnamed Client'}`} />
+            </div>
+          )}
         </div>
       </div>
 

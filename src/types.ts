@@ -96,6 +96,7 @@ export interface Job {
   jobType: 'assessment' | 'pruning' | 'removal' | 'treatment' | 'consultation' | 'emergency' | 'other';
   hourlyRate?: number;
   totalCost?: number;
+  assignedTo: string[]; // team_members.id values
   createdAt: number;
   updatedAt: number;
   siteId?: string; // Link to site if part of a site
@@ -168,6 +169,7 @@ export interface Quote {
   accessParking: string;
   status: 'new' | 'scheduled' | 'completed';
   archived: boolean;
+  assignedTo: string[]; // team_members.id values
   createdAt: number;
   updatedAt: number;
 }
