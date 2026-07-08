@@ -24,15 +24,59 @@ interface ClinometerToolProps {
  */
 
 type Step = 'setup' | 'base' | 'top' | 'result';
+type DistanceMode = 'known' | 'gps';
+
+interface GeoPoint {
+  lat: number;
+  lon: number;
+  accuracy: number; // metres, as reported by the device
+}
+
+// Default starting gap when using the GPS "walk it out" method — the app
+// asks the user to stand about this far from the trunk for the base shot.
+const GPS_START_DISTANCE = 1;
+
+// Straight-line distance between two GPS points, in metres (haversine).
+const haversineMeters = (a: GeoPoint, b: GeoPoint): number => {
+  const R = 6371000;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+};
+
+// Wraps the browser geolocation API in a promise with sane accuracy settings.
+const getPosition = (): Promise<GeolocationPosition> => {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('This device does not support location services.'));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0,
+    });
+  });
+};
 
 export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOnly = false, onUpdate }) => {
   const [step, setStep] = useState<Step>('setup');
   const [distance, setDistance] = useState<number>(0);
+  const [distanceMode, setDistanceMode] = useState<DistanceMode>('known');
 
   const [cameraOn, setCameraOn] = useState(false);
   const [liveAngle, setLiveAngle] = useState<number | null>(null);
   const [baseAngle, setBaseAngle] = useState<number | null>(null);
   const [topAngle, setTopAngle] = useState<number | null>(null);
+
+  const [baseLocation, setBaseLocation] = useState<GeoPoint | null>(null);
+  const [topLocation, setTopLocation] = useState<GeoPoint | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [gpsError, setGpsError] = useState('');
 
   const [cameraError, setCameraError] = useState('');
   const [sensorError, setSensorError] = useState('');
@@ -69,6 +113,12 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
   const start = async () => {
     setCameraError('');
     setSensorError('');
+    setGpsError('');
+    setBaseAngle(null);
+    setTopAngle(null);
+    setBaseLocation(null);
+    setTopLocation(null);
+    setSaved(false);
 
     // 1) Motion permission (iOS 13+ needs an explicit prompt on a tap)
     try {
@@ -124,9 +174,37 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
   }, [step]);
 
   // --- Capture -------------------------------------------------------------
-  const captureCurrent = () => {
+  const captureCurrent = async () => {
     const a = liveAngleRef.current;
     if (a === null) return;
+
+    if (distanceMode === 'gps') {
+      setGpsError('');
+      setLocating(true);
+      try {
+        const pos = await getPosition();
+        const point: GeoPoint = {
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          accuracy: pos.coords.accuracy,
+        };
+        if (step === 'base') {
+          setBaseAngle(a);
+          setBaseLocation(point);
+          setStep('top');
+        } else if (step === 'top') {
+          setTopAngle(a);
+          setTopLocation(point);
+          setStep('result');
+        }
+      } catch {
+        setGpsError('Could not get your location. Make sure Location access is allowed for this site, then try again.');
+      } finally {
+        setLocating(false);
+      }
+      return;
+    }
+
     if (step === 'base') { setBaseAngle(a); setStep('top'); }
     else if (step === 'top') { setTopAngle(a); setStep('result'); }
   };
@@ -134,15 +212,43 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
   const redo = () => {
     setBaseAngle(null);
     setTopAngle(null);
+    setBaseLocation(null);
+    setTopLocation(null);
+    setGpsError('');
     setSaved(false);
     setStep('base');
   };
 
   // --- Height calculation --------------------------------------------------
   const toRad = (deg: number) => (deg * Math.PI) / 180;
+
+  // Only used in gps mode: how far the user walked between the two shots,
+  // and the resulting full distance to the trunk from the second (top) spot.
+  const walkedDistance = baseLocation && topLocation ? haversineMeters(baseLocation, topLocation) : null;
+  const gpsDistanceToTop = walkedDistance !== null ? GPS_START_DISTANCE + walkedDistance : null;
+
+  // Combined GPS uncertainty — a rough sense of how much the walked distance
+  // could be off by, since each fix has its own accuracy radius.
+  const gpsCombinedAccuracy = baseLocation && topLocation
+    ? Math.sqrt(baseLocation.accuracy ** 2 + topLocation.accuracy ** 2)
+    : null;
+  const gpsAccuracyIsPoor = gpsCombinedAccuracy !== null && walkedDistance !== null
+    ? (gpsCombinedAccuracy > 10 || gpsCombinedAccuracy > walkedDistance * 0.4)
+    : false;
+
   let height: number | null = null;
-  if (distance > 0 && topAngle !== null && baseAngle !== null) {
-    height = distance * (Math.tan(toRad(topAngle)) - Math.tan(toRad(baseAngle)));
+  if (distanceMode === 'known') {
+    if (distance > 0 && topAngle !== null && baseAngle !== null) {
+      height = distance * (Math.tan(toRad(topAngle)) - Math.tan(toRad(baseAngle)));
+    }
+  } else if (distanceMode === 'gps') {
+    if (gpsDistanceToTop !== null && topAngle !== null && baseAngle !== null) {
+      // Base shot taken from GPS_START_DISTANCE away establishes eye height;
+      // top shot taken from further back (gpsDistanceToTop away) reaches the
+      // treetop. This collapses to the standard two-angle formula when the
+      // user doesn't move at all (gpsDistanceToTop === GPS_START_DISTANCE).
+      height = gpsDistanceToTop * Math.tan(toRad(topAngle)) - GPS_START_DISTANCE * Math.tan(toRad(baseAngle));
+    }
   }
   const heightRounded = height !== null && isFinite(height) && height > 0 ? Math.round(height * 10) / 10 : null;
 
@@ -153,7 +259,10 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
   };
 
   // --- Instruction text per step ------------------------------------------
-  const banner = {
+  const banner = distanceMode === 'gps' ? {
+    base: { icon: ArrowDown, title: 'Stand ~1m from the trunk', body: 'Aim the cross-hair at the base of the trunk, hold steady, then tap Capture. Your starting spot gets marked automatically.' },
+    top:  { icon: ArrowUp,   title: 'Walk back, then aim at the TOP', body: 'Keep facing the tree and walk backward until you can see the whole thing. Aim the cross-hair at the very top and tap Capture.' },
+  } as const : {
     base: { icon: ArrowDown, title: 'Aim at the BASE of the trunk', body: 'Line up the cross-hair with the bottom of the tree, hold steady, then tap Capture.' },
     top:  { icon: ArrowUp,   title: 'Aim at the TOP of the tree',   body: 'Line up the cross-hair with the very highest point, hold steady, then tap Capture.' },
   } as const;
@@ -172,34 +281,92 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
           Uses your phone camera and tilt sensor. Stand back far enough to see the whole tree, then aim at its base and its top.
         </p>
 
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 mb-5">
-          <ol className="space-y-3 text-sm text-[var(--text-secondary)]">
-            <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">1</span> Measure your distance from the trunk (e.g. with a tape or by pacing) and type it in below.</li>
-            <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">2</span> Hold the phone upright. Aim the cross-hair at the base of the trunk and capture.</li>
-            <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">3</span> Tilt up, aim the cross-hair at the treetop and capture. The height appears automatically.</li>
-          </ol>
+        {/* Distance-mode selector */}
+        <div className="grid grid-cols-2 gap-3 mb-5">
+          <button
+            onClick={() => setDistanceMode('known')}
+            disabled={readOnly}
+            className={`text-left rounded-xl border p-4 transition-colors ${
+              distanceMode === 'known'
+                ? 'border-[var(--border-bright)] bg-[rgba(90,143,90,0.12)]'
+                : 'border-[var(--border)] hover:border-[var(--border-bright)]'
+            }`}
+          >
+            <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">I know the distance</p>
+            <p className="text-xs text-[var(--text-muted)]">Measured it with a tape, or by pacing it out.</p>
+          </button>
+          <button
+            onClick={() => setDistanceMode('gps')}
+            disabled={readOnly}
+            className={`text-left rounded-xl border p-4 transition-colors ${
+              distanceMode === 'gps'
+                ? 'border-[var(--border-bright)] bg-[rgba(90,143,90,0.12)]'
+                : 'border-[var(--border)] hover:border-[var(--border-bright)]'
+            }`}
+          >
+            <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">Walk it out with GPS</p>
+            <p className="text-xs text-[var(--text-muted)]">No measuring needed — your phone works out the distance as you walk back.</p>
+          </button>
         </div>
 
-        <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
-          Horizontal distance to the trunk (metres)
-        </label>
-        <input
-          type="number" min="0" step="0.1" inputMode="decimal"
-          value={distance || ''}
-          disabled={readOnly}
-          onChange={(e) => setDistance(parseFloat(e.target.value) || 0)}
-          className="w-full px-3 py-3 text-lg border border-[var(--border)] rounded-lg bg-[var(--forest)] text-[var(--text-primary)] focus:ring-2 focus:ring-green-500 focus:border-transparent mb-5"
-          placeholder="e.g. 10"
-        />
+        {distanceMode === 'known' ? (
+          <>
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 mb-5">
+              <ol className="space-y-3 text-sm text-[var(--text-secondary)]">
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">1</span> Measure your distance from the trunk (e.g. with a tape or by pacing) and type it in below.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">2</span> Hold the phone upright. Aim the cross-hair at the base of the trunk and capture.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">3</span> Tilt up, aim the cross-hair at the treetop and capture. The height appears automatically.</li>
+              </ol>
+            </div>
 
-        <button
-          onClick={start}
-          disabled={readOnly || distance <= 0}
-          className="w-full flex items-center justify-center gap-2 bg-[var(--canopy)] text-[var(--cream)] px-4 py-4 rounded-lg hover:bg-[var(--moss)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-base font-medium"
-        >
-          <Camera size={20} />
-          {distance > 0 ? 'Start camera' : 'Enter a distance first'}
-        </button>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+              Horizontal distance to the trunk (metres)
+            </label>
+            <input
+              type="number" min="0" step="0.1" inputMode="decimal"
+              value={distance || ''}
+              disabled={readOnly}
+              onChange={(e) => setDistance(parseFloat(e.target.value) || 0)}
+              className="w-full px-3 py-3 text-lg border border-[var(--border)] rounded-lg bg-[var(--forest)] text-[var(--text-primary)] focus:ring-2 focus:ring-green-500 focus:border-transparent mb-5"
+              placeholder="e.g. 10"
+            />
+
+            <button
+              onClick={start}
+              disabled={readOnly || distance <= 0}
+              className="w-full flex items-center justify-center gap-2 bg-[var(--canopy)] text-[var(--cream)] px-4 py-4 rounded-lg hover:bg-[var(--moss)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-base font-medium"
+            >
+              <Camera size={20} />
+              {distance > 0 ? 'Start camera' : 'Enter a distance first'}
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 mb-5">
+              <ol className="space-y-3 text-sm text-[var(--text-secondary)]">
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">1</span> Stand about 1m from the trunk. Aim the cross-hair at the base and capture — this marks your spot.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">2</span> Walk straight backward, facing the tree, until you can see the whole thing.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">3</span> Aim the cross-hair at the treetop and capture. Your phone works out how far you walked, and the height appears automatically.</li>
+              </ol>
+            </div>
+
+            <div className="flex items-start gap-2 rounded-lg border border-[rgba(212,160,23,0.3)] bg-[rgba(212,160,23,0.12)] p-3 mb-5">
+              <AlertTriangle size={16} className="text-[var(--amber-light)] mt-0.5 shrink-0" />
+              <p className="text-xs text-[var(--text-secondary)]">
+                This uses your phone's location to measure the walk-back distance, which is a rough estimate — usually accurate to a few metres. Good for spots you can't measure directly; for the most accurate result, use "I know the distance" with a tape or paced-out measurement instead. You'll be asked to allow Location access.
+              </p>
+            </div>
+
+            <button
+              onClick={start}
+              disabled={readOnly}
+              className="w-full flex items-center justify-center gap-2 bg-[var(--canopy)] text-[var(--cream)] px-4 py-4 rounded-lg hover:bg-[var(--moss)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-base font-medium"
+            >
+              <Camera size={20} />
+              Start camera
+            </button>
+          </>
+        )}
 
         {treeData.height ? (
           <p className="text-xs text-[var(--text-muted)] mt-4 text-center">Current saved height: <strong className="text-[var(--leaf)]">{treeData.height} m</strong></p>
@@ -224,14 +391,23 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
           <p className="text-5xl font-semibold text-[var(--leaf)]">
             {heightRounded !== null ? `${heightRounded.toFixed(1)} m` : '—'}
           </p>
-          <div className="flex justify-center gap-6 mt-4 text-sm text-[var(--text-muted)]">
-            <span>Distance: <strong className="text-[var(--text-secondary)]">{distance} m</strong></span>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 mt-4 text-sm text-[var(--text-muted)]">
+            {distanceMode === 'known' ? (
+              <span>Distance: <strong className="text-[var(--text-secondary)]">{distance} m</strong></span>
+            ) : (
+              <span>Walked back: <strong className="text-[var(--text-secondary)]">{walkedDistance !== null ? `~${walkedDistance.toFixed(1)} m` : '—'}</strong></span>
+            )}
             <span>Base: <strong className="text-[var(--text-secondary)]">{baseAngle?.toFixed(1)}°</strong></span>
             <span>Top: <strong className="text-[var(--text-secondary)]">{topAngle?.toFixed(1)}°</strong></span>
           </div>
           {heightRounded === null && (
             <p className="text-xs text-[var(--amber-light)] mt-3">
               That didn't produce a valid height. Make sure the top angle is higher than the base angle, then try again.
+            </p>
+          )}
+          {distanceMode === 'gps' && gpsAccuracyIsPoor && heightRounded !== null && (
+            <p className="text-xs text-[var(--amber-light)] mt-3">
+              Your phone's location accuracy was low for this measurement (roughly ±{gpsCombinedAccuracy?.toFixed(0)}m), so treat this height as a rough estimate. Try again in a more open area, or use "I know the distance" for a more precise result.
             </p>
           )}
         </div>
@@ -356,6 +532,13 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
             </div>
           )}
 
+          {gpsError && (
+            <div className="flex items-start gap-2 rounded-lg bg-black/50 p-2 mb-3">
+              <AlertTriangle size={14} className="text-[var(--amber-light)] mt-0.5 shrink-0" />
+              <p className="text-xs text-white/85">{gpsError}</p>
+            </div>
+          )}
+
           {manualMode ? (
             <div className="flex items-center gap-2 mb-2">
               <input
@@ -369,11 +552,11 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
 
           <button
             onClick={captureCurrent}
-            disabled={liveAngle === null}
+            disabled={liveAngle === null || locating}
             className="w-full flex items-center justify-center gap-2 bg-[var(--leaf)] text-[var(--forest)] px-4 py-4 rounded-lg font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Camera size={20} />
-            Capture {step === 'base' ? 'base' : 'top'} angle
+            {locating ? 'Getting your location…' : `Capture ${step === 'base' ? 'base' : 'top'} angle`}
           </button>
 
           {!manualMode && (
