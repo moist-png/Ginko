@@ -25,8 +25,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     try {
       await signInAsGuest();
       onLogin();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not start guest session');
+    } catch (err: any) {
+      console.error('Guest sign-in failed:', err);
+      const parts = [
+        err?.message && err.message !== '{}' ? err.message : null,
+        err?.status ? `status ${err.status}` : null,
+        err?.code ? `code ${err.code}` : null,
+        err?.name && err.name !== 'Error' ? err.name : null,
+      ].filter(Boolean);
+      setError(parts.length ? parts.join(' · ') : 'Could not start guest session (no error detail returned)');
     } finally {
       setGuestLoading(false);
     }
