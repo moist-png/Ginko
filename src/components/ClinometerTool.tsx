@@ -467,7 +467,7 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
             <div className="flex items-start gap-2 rounded-lg border border-[rgba(212,160,23,0.3)] bg-[rgba(212,160,23,0.12)] p-3 mb-3">
               <AlertTriangle size={16} className="text-[var(--amber-light)] mt-0.5 shrink-0" />
               <p className="text-xs text-[var(--text-secondary)]">
-                <strong>You don't need to walk backwards or keep the tree in view while moving.</strong> Walking backwards without looking where you're going is a trip and collision hazard. Face your direction of travel, watch your footing, and only turn back to the tree once you've stopped to take the top shot.
+                <strong>You do not need to walk backwards or keep the tree in frame while moving.</strong>
               </p>
             </div>
 
