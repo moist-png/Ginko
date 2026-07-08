@@ -45,8 +45,48 @@ export interface TeamMember {
   role: 'admin' | 'arborist' | 'supervisor' | 'apprentice';
   colour: string;
   active: boolean;
+  reports_to?: string | null;
+  invite_code?: string | null;
+  invite_status: 'pending' | 'active';
   created_at: string;
   updated_at: string;
+}
+
+export type NotificationType = 'assignment' | 'mention' | 'status_change' | 'announcement' | 'info';
+export type LinkType = 'job' | 'quote' | 'board';
+
+export interface AppNotification {
+  id: string;
+  recipient_profile_id: string;
+  actor_profile_id?: string | null;
+  type: NotificationType;
+  title: string;
+  body: string;
+  link_type?: LinkType | null;
+  link_id?: string | null;
+  read: boolean;
+  created_at: string;
+}
+
+export type BoardContextType = 'announcement' | 'job' | 'quote';
+
+export interface BoardPost {
+  id: string;
+  author_profile_id?: string | null;
+  context_type: BoardContextType;
+  context_id?: string | null;
+  body: string;
+  pinned: boolean;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+}
+
+export interface BoardRead {
+  id: string;
+  post_id: string;
+  profile_id: string;
+  read_at: string;
 }
 
 export interface Site {
@@ -145,6 +185,7 @@ export interface Quote {
   access_parking: string;
   status: 'new' | 'scheduled' | 'completed';
   archived: boolean;
+  assigned_to: string[];
   created_at: string;
   updated_at: string;
 }

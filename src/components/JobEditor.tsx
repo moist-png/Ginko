@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Job, Site } from '../types';
-import { ArrowLeft, Save, Trash2, Clock, Download } from 'lucide-react';
+import { ArrowLeft, Save, Trash2, Clock, Download, Users } from 'lucide-react';
 import { exportSingleJob } from '../utils/exportUtils';
-import { supabase } from '../utils/supabase';
+import { supabase, TeamMember } from '../utils/supabase';
 import { ExportModal } from './ExportModal';
 import { ConfirmationModal } from './ConfirmationModal';
+import { BoardThread } from './BoardThread';
 import { db } from '../utils/offline';
 import { fromDbJob, toDbJob } from '../utils/mappers';
+import { notifyAssignment, notifyStatusChange } from '../utils/notifications';
+import { isSupervisorOrAbove } from '../utils/auth';
+
+const JOB_STATUS_OPTIONS: { value: Job['status']; label: string }[] = [
+  { value: 'scheduled', label: 'Scheduled' },
+  { value: 'in-progress', label: 'In Progress' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
 
 interface JobEditorProps {
   job: Job;
+  teamMembers: TeamMember[];
   onSave: (job: Job) => void;
   onDelete?: (jobId: string) => void;
   onBack: () => void;
@@ -18,6 +29,7 @@ interface JobEditorProps {
 
 export const JobEditor: React.FC<JobEditorProps> = ({
   job,
+  teamMembers,
   onSave,
   onDelete,
   onBack,
@@ -29,6 +41,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
+  const canCancel = isSupervisorOrAbove();
 
   useEffect(() => {
     (async () => {
@@ -60,13 +73,38 @@ export const JobEditor: React.FC<JobEditorProps> = ({
     setSaving(true);
     setSaveError('');
     try {
+      const previousAssigned = job.assignedTo || [];
+      const previousStatus = job.status;
       await db.upsert('jobs', toDbJob(editingJob));
+
+      const newlyAssigned = (editingJob.assignedTo || []).filter(id => !previousAssigned.includes(id));
+      if (newlyAssigned.length > 0) {
+        await notifyAssignment(teamMembers, newlyAssigned, {
+          title: `Assigned to job: ${editingJob.title || 'Untitled Job'}`,
+          linkType: 'job', linkId: editingJob.id,
+        });
+      }
+      if (!isNew && previousStatus !== editingJob.status) {
+        const stillAssigned = (editingJob.assignedTo || []).filter(id => !newlyAssigned.includes(id));
+        await notifyStatusChange(teamMembers, stillAssigned, {
+          title: `Job "${editingJob.title || 'Untitled Job'}" is now ${editingJob.status}`,
+          linkType: 'job', linkId: editingJob.id,
+        });
+      }
       onSave(editingJob);
     } catch (err: any) {
       setSaveError(err?.message || 'Could not save. Check your connection and try again.');
     } finally {
       setSaving(false);
     }
+  };
+
+  const toggleAssignee = (id: string) => {
+    setEditingJob(prev => {
+      const current = prev.assignedTo || [];
+      const next = current.includes(id) ? current.filter(x => x !== id) : [...current, id];
+      return { ...prev, assignedTo: next };
+    });
   };
 
   const handleDelete = () => {
@@ -226,6 +264,58 @@ export const JobEditor: React.FC<JobEditorProps> = ({
 
           <div className="bg-[var(--surface-raised)] rounded-lg shadow-md p-6">
             <div className="flex items-center gap-2 mb-6">
+              <Users className="text-[var(--leaf)]" size={24} />
+              <h2 className="text-xl font-semibold">Assignment &amp; Status</h2>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">Assigned To</label>
+                <div className="flex flex-wrap gap-2">
+                  {teamMembers.filter(m => m.active).length === 0 && (
+                    <p className="text-xs text-[var(--text-muted)]">No active team members yet — add some on the Team page.</p>
+                  )}
+                  {teamMembers.filter(m => m.active).map(member => {
+                    const selected = (editingJob.assignedTo || []).includes(member.id);
+                    return (
+                      <button
+                        key={member.id}
+                        type="button"
+                        onClick={() => toggleAssignee(member.id)}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '999px',
+                          fontSize: '13px', fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
+                          background: selected ? member.colour + '26' : 'transparent',
+                          border: `1px solid ${selected ? member.colour : 'var(--border)'}`,
+                          color: selected ? 'var(--text-primary)' : 'var(--text-muted)',
+                        }}
+                      >
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: member.colour, flexShrink: 0 }} />
+                        {member.name}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-[var(--text-muted)] mt-2">
+                  {(editingJob.assignedTo || []).length === 0 ? 'Unassigned — visible to the whole team until someone is picked.' : 'Assigned people are notified when you save.'}
+                </p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">Status</label>
+                <select
+                  value={editingJob.status}
+                  onChange={(e) => updateJob('status', e.target.value as Job['status'])}
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  {JOB_STATUS_OPTIONS.filter(opt => opt.value !== 'cancelled' || canCancel).map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[var(--surface-raised)] rounded-lg shadow-md p-6">
+            <div className="flex items-center gap-2 mb-6">
               <Clock className="text-[var(--leaf)]" size={24} />
               <h2 className="text-xl font-semibold">Time Tracking</h2>
             </div>
@@ -318,6 +408,12 @@ export const JobEditor: React.FC<JobEditorProps> = ({
               </div>
             </div>
           </div>
+
+          {!isNew && (
+            <div className="bg-[var(--surface-raised)] rounded-lg shadow-md p-6">
+              <BoardThread contextType="job" contextId={editingJob.id} teamMembers={teamMembers} notifyTitle={`New comment on job: ${editingJob.title || 'Untitled Job'}`} />
+            </div>
+          )}
         </div>
       </div>
 

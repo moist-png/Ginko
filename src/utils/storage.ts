@@ -219,6 +219,7 @@ export const createEmptyJob = (siteId?: string): Job => ({
   jobType: 'assessment',
   hourlyRate: 0,
   totalCost: 0,
+  assignedTo: [],
   createdAt: Date.now(),
   updatedAt: Date.now(),
   siteId
@@ -272,6 +273,7 @@ export const createEmptyQuote = (): Quote => ({
   accessParking: '',
   status: 'new',
   archived: false,
+  assignedTo: [],
   createdAt: Date.now(),
   updatedAt: Date.now()
 });

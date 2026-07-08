@@ -5,9 +5,11 @@ import { Plus, Search, Briefcase, Calendar, Clock, MapPin, User, DollarSign, Arr
 import { exportJobsCSV } from '../utils/exportUtils';
 import { canUserEdit } from '../utils/auth';
 import { ExportModal } from './ExportModal';
+import type { TeamMember } from '../utils/supabase';
 
 interface JobListProps {
   jobs: Job[];
+  teamMembers: TeamMember[];
   onSelectJob: (job: Job) => void;
   onCreateJob: () => void;
   searchQuery: string;
@@ -34,7 +36,7 @@ const STATUS_STYLES: Record<Job['status'], { bg: string; color: string }> = {
   cancelled: { bg: 'rgba(100,100,100,0.15)', color: 'var(--text-muted)' },
 };
 
-export const JobList: React.FC<JobListProps> = ({ jobs, onSelectJob, onCreateJob, searchQuery, onSearchChange }) => {
+export const JobList: React.FC<JobListProps> = ({ jobs, teamMembers, onSelectJob, onCreateJob, searchQuery, onSearchChange }) => {
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [showExportModal, setShowExportModal] = useState(false);
@@ -129,6 +131,19 @@ export const JobList: React.FC<JobListProps> = ({ jobs, onSelectJob, onCreateJob
                       {job.totalCost != null && job.totalCost > 0 && <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '13px', color: 'var(--amber)' }}><DollarSign size={13} />${job.totalCost.toFixed(2)}</span>}
                     </div>
                   </div>
+                  {job.assignedTo && job.assignedTo.length > 0 && (
+                    <div style={{ display: 'flex', flexShrink: 0 }}>
+                      {job.assignedTo.slice(0, 4).map((id, i) => {
+                        const member = teamMembers.find(m => m.id === id);
+                        if (!member) return null;
+                        return (
+                          <div key={id} title={member.name} style={{ width: '26px', height: '26px', borderRadius: '50%', background: member.colour + '33', border: `2px solid ${member.colour}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700, color: member.colour, marginLeft: i > 0 ? '-8px' : 0 }}>
+                            {member.name.charAt(0).toUpperCase()}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             );

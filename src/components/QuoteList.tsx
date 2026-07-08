@@ -7,9 +7,11 @@ import { exportQuotesCSV } from '../utils/exportUtils';
 import { CalendarImport } from './CalendarImport';
 import { EmailQuoteImport } from './EmailQuoteImport';
 import { ExportModal } from './ExportModal';
+import type { TeamMember } from '../utils/supabase';
 
 interface QuoteListProps {
   quotes: Quote[];
+  teamMembers: TeamMember[];
   onSelectQuote: (quote: Quote) => void;
   onCreateQuote: () => void;
   onImportQuotes: (quotes: Quote[]) => void;
@@ -23,6 +25,7 @@ type SortDirection = 'asc' | 'desc';
 
 export const QuoteList: React.FC<QuoteListProps> = ({
   quotes,
+  teamMembers,
   onSelectQuote,
   onCreateQuote,
   onImportQuotes,
@@ -273,6 +276,19 @@ export const QuoteList: React.FC<QuoteListProps> = ({
                   )}
                 </div>
                 <div className="flex items-center gap-2">
+                  {quote.assignedTo && quote.assignedTo.length > 0 && (
+                    <div className="flex mr-1">
+                      {quote.assignedTo.slice(0, 4).map((id, i) => {
+                        const member = teamMembers.find(m => m.id === id);
+                        if (!member) return null;
+                        return (
+                          <div key={id} title={member.name} style={{ width: '24px', height: '24px', borderRadius: '50%', background: member.colour + '33', border: `2px solid ${member.colour}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: member.colour, marginLeft: i > 0 ? '-7px' : 0 }}>
+                            {member.name.charAt(0).toUpperCase()}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                   <button
                     onClick={(e) => handleStatusToggle(e, quote.id, quote.status)}
                     disabled={quote.archived || !canEdit}

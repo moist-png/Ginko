@@ -90,6 +90,7 @@ export const fromDbJob = (j: any): Job => ({
   jobType: (j?.job_type ?? j?.jobType) as Job['jobType'] || 'assessment',
   hourlyRate: num(j?.hourly_rate ?? j?.hourlyRate),
   totalCost: num(j?.total_cost ?? j?.totalCost),
+  assignedTo: arr<string>(j?.assigned_to ?? j?.assignedTo),
   createdAt: Date.now(),
   updatedAt: Date.now(),
   siteId: j?.site_id ?? j?.siteId ?? undefined,
@@ -112,6 +113,7 @@ export const toDbJob = (j: Job): Record<string, any> => ({
   job_type: j.jobType || 'assessment',
   hourly_rate: num(j.hourlyRate),
   total_cost: num(j.totalCost),
+  assigned_to: arr<string>(j.assignedTo),
   updated_at: nowIso(),
 });
 
@@ -156,6 +158,7 @@ export const fromDbQuote = (q: any): Quote => ({
   accessParking: str(q?.access_parking ?? q?.accessParking),
   status: (q?.status as Quote['status']) || 'new',
   archived: Boolean(q?.archived),
+  assignedTo: arr<string>(q?.assigned_to ?? q?.assignedTo),
   createdAt: Date.now(),
   updatedAt: Date.now(),
 });
@@ -173,6 +176,7 @@ export const toDbQuote = (q: Quote): Record<string, any> => ({
   access_parking: str(q.accessParking),
   status: q.status || 'new',
   archived: Boolean(q.archived),
+  assigned_to: arr<string>(q.assignedTo),
   updated_at: nowIso(),
 });
 

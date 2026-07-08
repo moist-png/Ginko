@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './utils/supabase';
+import type { TeamMember } from './utils/supabase';
 import { signOut } from './utils/auth';
 import { LoginScreen } from './components/LoginScreen';
 import { Dashboard } from './components/Dashboard';
@@ -19,18 +20,28 @@ import { QuoteList } from './components/QuoteList';
 import { QuoteEditor } from './components/QuoteEditor';
 import { RecentlyDeleted } from './components/RecentlyDeleted';
 import { PortalView } from './components/ClientPortal';
-import { getPendingCount, syncQueue } from './utils/offline';
+import { InviteJoin } from './components/InviteJoin';
+import { MessageBoard } from './components/MessageBoard';
+import { NotificationBell } from './components/NotificationBell';
+import { db, getPendingCount, syncQueue } from './utils/offline';
 import {
   Home, Leaf, TreePine, Shield, FileText, Menu, X,
-  LogOut, Trash2, Users, LayoutDashboard, RefreshCw, Wifi, WifiOff
+  LogOut, Trash2, Users, LayoutDashboard, RefreshCw, Wifi, WifiOff, MessageSquare
 } from 'lucide-react';
 
-type AppView = 'dashboard' | 'sites' | 'chlorophyll' | 'jobs' | 'daily-risk' | 'quotes' | 'team';
+type AppView = 'dashboard' | 'sites' | 'chlorophyll' | 'jobs' | 'daily-risk' | 'quotes' | 'team' | 'board';
 
 // Check if we're on a portal URL
 const getPortalToken = () => {
   const path = window.location.pathname;
   const match = path.match(/^\/portal\/(.+)$/);
+  return match ? match[1] : null;
+};
+
+// Check if we're on an invite (join) URL
+const getJoinCode = () => {
+  const path = window.location.pathname;
+  const match = path.match(/^\/join\/(.+)$/);
   return match ? match[1] : null;
 };
 
@@ -59,10 +70,15 @@ function App() {
   const [quotes, setQuotes] = useState<any[]>([]);
   const [risks, setRisks] = useState<any[]>([]);
   const [readings, setReadings] = useState<any[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
 
   // Check for portal URL first
   const portalToken = getPortalToken();
   if (portalToken) return <PortalView token={portalToken} />;
+
+  // Check for an invite (join) URL — no login required to view this
+  const joinCode = getJoinCode();
+  if (joinCode) return <InviteJoin code={joinCode} />;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -92,14 +108,16 @@ function App() {
   }, [session]);
 
   const loadCoreData = async () => {
-    const [sitesRes, reportsRes, jobsRes, quotesRes, risksRes, readingsRes] = await Promise.all([
+    const [sitesRes, reportsRes, jobsRes, quotesRes, risksRes, readingsRes, teamRes] = await Promise.all([
       supabase.from('sites').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
       supabase.from('reports').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
       supabase.from('jobs').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
       supabase.from('quotes').select('*').order('updated_at', { ascending: false }),
       supabase.from('daily_risks').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
       supabase.from('chlorophyll_readings').select('*').is('deleted_at', null).order('updated_at', { ascending: false }),
+      supabase.from('team_members').select('*').order('name'),
     ]);
+    if (teamRes.data) setTeamMembers(teamRes.data as TeamMember[]);
     if (sitesRes.data) setSites(sitesRes.data);
     if (reportsRes.data) setReports(reportsRes.data);
     if (jobsRes.data) setJobs(jobsRes.data);
@@ -147,15 +165,36 @@ function App() {
     { view: 'daily-risk' as AppView, icon: Shield, label: 'Risk' },
     { view: 'quotes' as AppView, icon: FileText, label: 'Quotes' },
     { view: 'team' as AppView, icon: Users, label: 'Team' },
+    { view: 'board' as AppView, icon: MessageSquare, label: 'Board' },
   ];
+
+  const openJobById = (id: string) => {
+    const found = jobs.find(j => j.id === id);
+    if (found) { setSelectedJob(found); setIsNewItem(false); }
+  };
+  const openQuoteById = (id: string) => {
+    const found = quotes.find(q => q.id === id);
+    if (found) { setSelectedQuote(found); setIsNewItem(false); }
+  };
+  const openBoard = () => {
+    setSelectedJob(null); setSelectedQuote(null);
+    setCurrentView('board');
+  };
+
+  const handleUpdateQuoteStatus = async (quoteId: string, status: any) => {
+    try {
+      await db.upsert('quotes', { id: quoteId, status });
+      setQuotes(prev => prev.map(q => q.id === quoteId ? { ...q, status } : q));
+    } catch { /* offline queue already handles retry */ }
+  };
 
   // Full-screen editor views
   if (selectedReport) return <ReportEditor report={selectedReport} onSave={r => { setSelectedReport(null); loadCoreData(); }} onBack={() => setSelectedReport(null)} />;
   if (selectedReading) return <ChlorophyllEditor reading={selectedReading} onSave={() => { setSelectedReading(null); loadCoreData(); }} onDelete={() => { setSelectedReading(null); loadCoreData(); }} onBack={() => setSelectedReading(null)} isNew={isNewItem} allReadings={readings} />;
   if (editingSite) return <SiteEditor site={editingSite} onSave={s => { setEditingSite(null); setIsNewItem(false); loadCoreData(); if (isNewItem) setSelectedSite(s); }} onDelete={() => { setEditingSite(null); setSelectedSite(null); loadCoreData(); }} onBack={() => { setEditingSite(null); setIsNewItem(false); }} isNew={isNewItem} />;
-  if (selectedJob) return <JobEditor job={selectedJob} onSave={() => { setSelectedJob(null); loadCoreData(); }} onDelete={() => { setSelectedJob(null); loadCoreData(); }} onBack={() => setSelectedJob(null)} isNew={isNewItem} />;
+  if (selectedJob) return <JobEditor job={selectedJob} teamMembers={teamMembers} onSave={() => { setSelectedJob(null); loadCoreData(); }} onDelete={() => { setSelectedJob(null); loadCoreData(); }} onBack={() => setSelectedJob(null)} isNew={isNewItem} />;
   if (selectedRisk) return <DailyRiskEditor risk={selectedRisk} onSave={() => { setSelectedRisk(null); loadCoreData(); }} onDelete={() => { setSelectedRisk(null); loadCoreData(); }} onBack={() => setSelectedRisk(null)} isNew={isNewItem} />;
-  if (selectedQuote) return <QuoteEditor quote={selectedQuote} onSave={() => { setSelectedQuote(null); loadCoreData(); }} onDelete={() => { setSelectedQuote(null); loadCoreData(); }} onArchive={() => { setSelectedQuote(null); loadCoreData(); }} onBack={() => setSelectedQuote(null)} isNew={isNewItem} />;
+  if (selectedQuote) return <QuoteEditor quote={selectedQuote} teamMembers={teamMembers} onSave={() => { setSelectedQuote(null); loadCoreData(); }} onDelete={() => { setSelectedQuote(null); loadCoreData(); }} onArchive={() => { setSelectedQuote(null); loadCoreData(); }} onBack={() => setSelectedQuote(null)} isNew={isNewItem} />;
   if (selectedSite) return (
     <SiteDetailScreen
       site={selectedSite}
@@ -206,6 +245,8 @@ function App() {
               <button onClick={() => setShowRecentlyDeleted(true)} className="hidden md:flex" style={{ alignItems: 'center', padding: '7px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-muted)', cursor: 'pointer' }} title="Recently Deleted">
                 <Trash2 size={15} />
               </button>
+
+              <NotificationBell onOpenJob={openJobById} onOpenQuote={openQuoteById} onOpenBoard={openBoard} />
 
               {session?.user && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -268,11 +309,13 @@ function App() {
 
         {currentView === 'chlorophyll' && <ChlorophyllList readings={readings} onSelectReading={setSelectedReading} onCreateReading={() => { setSelectedReading({ id: crypto.randomUUID(), tree_id: crypto.randomUUID(), tree_species: '', tree_location: '', tree_maturity: 'Juvenile', date: new Date().toISOString().split('T')[0], chlorophyll_level: 0, extension_growth: 0, notes: '', created_at: new Date().toISOString(), updated_at: new Date().toISOString() }); setIsNewItem(true); }} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
 
-        {currentView === 'jobs' && <JobList jobs={jobs} onSelectJob={setSelectedJob} onCreateJob={() => { setSelectedJob({ id: crypto.randomUUID(), title: '', client_name: '', location: '', date: new Date().toISOString().split('T')[0], start_time: '', end_time: '', time_spent: 0, work_completed: '', work_to_complete: '', notes: '', status: 'scheduled', job_type: 'assessment', hourly_rate: 0, total_cost: 0, assigned_to: [], created_at: new Date().toISOString(), updated_at: new Date().toISOString() }); setIsNewItem(true); }} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
+        {currentView === 'jobs' && <JobList jobs={jobs} teamMembers={teamMembers} onSelectJob={setSelectedJob} onCreateJob={() => { setSelectedJob({ id: crypto.randomUUID(), title: '', client_name: '', location: '', date: new Date().toISOString().split('T')[0], start_time: '', end_time: '', time_spent: 0, work_completed: '', work_to_complete: '', notes: '', status: 'scheduled', job_type: 'assessment', hourly_rate: 0, total_cost: 0, assigned_to: [], created_at: new Date().toISOString(), updated_at: new Date().toISOString() }); setIsNewItem(true); }} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
 
         {currentView === 'daily-risk' && <DailyRiskList risks={risks} onSelectRisk={setSelectedRisk} onCreateRisk={() => { setSelectedRisk({ id: crypto.randomUUID(), site_address: '', date: new Date().toISOString().split('T')[0], client_name: '', client_mobile: '', first_aid_location: '', nearest_hospital: '', hazards: {workingAtHeights:false,unstableGround:false,powerlines:false,undergroundServices:false,siteWorkers:false,pedestrians:false,traffic:false,noise:false,chainsaws:false,loweringDevices:false,ewp:false,crane:false,deadBranches:false,brokenBranches:false,deadTree:false,barkInclusions:false,treeLean:false,fallenTree:false,wildlife:false}, hazard_controls: [], signatures: [], created_at: new Date().toISOString(), updated_at: new Date().toISOString() }); setIsNewItem(true); }} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
 
-        {currentView === 'quotes' && <QuoteList quotes={quotes} onSelectQuote={setSelectedQuote} onCreateQuote={() => { setSelectedQuote({ id: crypto.randomUUID(), client_name: '', address: '', mobile: '', site_contact: '', scheduled_date: new Date().toISOString().split('T')[0], scheduled_time: '09:00', job_description: [{ id: crypto.randomUUID(), description: '' }], additional_equipment: '', access_parking: '', status: 'new', archived: false, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }); setIsNewItem(true); }} onImportQuotes={() => {}} onUpdateQuoteStatus={() => {}} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
+        {currentView === 'quotes' && <QuoteList quotes={quotes} teamMembers={teamMembers} onSelectQuote={setSelectedQuote} onCreateQuote={() => { setSelectedQuote({ id: crypto.randomUUID(), client_name: '', address: '', mobile: '', site_contact: '', scheduled_date: new Date().toISOString().split('T')[0], scheduled_time: '09:00', job_description: [{ id: crypto.randomUUID(), description: '' }], additional_equipment: '', access_parking: '', status: 'new', archived: false, assigned_to: [], created_at: new Date().toISOString(), updated_at: new Date().toISOString() }); setIsNewItem(true); }} onImportQuotes={() => {}} onUpdateQuoteStatus={handleUpdateQuoteStatus} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
+
+        {currentView === 'board' && <MessageBoard teamMembers={teamMembers} />}
       </main>
 
       <RecentlyDeleted isOpen={showRecentlyDeleted} onClose={() => setShowRecentlyDeleted(false)} onRecover={() => { loadCoreData(); setShowRecentlyDeleted(false); }} />
