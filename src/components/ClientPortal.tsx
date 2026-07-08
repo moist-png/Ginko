@@ -54,11 +54,11 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ site, onClose }) => 
         boxShadow: '0 24px 64px rgba(0,0,0,0.5)', maxHeight: '85vh', overflowY: 'auto'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(90,143,90,0.15)', border: '1px solid rgba(90,143,90,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(138,111,76,0.15)', border: '1px solid rgba(138,111,76,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Globe size={20} color="var(--leaf)" />
           </div>
           <div>
-            <h2 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '20px', color: 'var(--text-primary)' }}>Client Portal</h2>
+            <h2 style={{ fontFamily: 'Newsreader, serif', fontSize: '20px', color: 'var(--text-primary)' }}>Client Portal</h2>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{site.name}</p>
           </div>
         </div>
@@ -165,7 +165,7 @@ export const PortalView: React.FC<{ token: string }> = ({ token }) => {
     <div style={{ minHeight: '100vh', background: 'var(--forest)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
       <div style={{ textAlign: 'center', maxWidth: '400px' }}>
         <div style={{ fontSize: '48px', marginBottom: '16px' }}>🌲</div>
-        <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '24px', color: 'var(--text-primary)', marginBottom: '8px' }}>Portal Not Found</h1>
+        <h1 style={{ fontFamily: 'Newsreader, serif', fontSize: '24px', color: 'var(--text-primary)', marginBottom: '8px' }}>Portal Not Found</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{error}</p>
       </div>
     </div>
@@ -180,7 +180,7 @@ export const PortalView: React.FC<{ token: string }> = ({ token }) => {
             <TreePine size={20} color="var(--leaf)" />
           </div>
           <div>
-            <div style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)' }}>Ginkgo</div>
+            <div style={{ fontFamily: 'Newsreader, serif', fontSize: '18px', color: 'var(--text-primary)' }}>Ginkgo</div>
             <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Client Portal</div>
           </div>
         </div>
@@ -189,7 +189,7 @@ export const PortalView: React.FC<{ token: string }> = ({ token }) => {
       <main style={{ maxWidth: '800px', margin: '0 auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
         {/* Site info */}
         <div>
-          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '28px', color: 'var(--text-primary)', marginBottom: '6px' }}>{site.name}</h1>
+          <h1 style={{ fontFamily: 'Newsreader, serif', fontSize: '28px', color: 'var(--text-primary)', marginBottom: '6px' }}>{site.name}</h1>
           {site.address && <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{site.address}</p>}
         </div>
 
@@ -205,7 +205,7 @@ export const PortalView: React.FC<{ token: string }> = ({ token }) => {
                       <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>{r.title || 'Tree Assessment'}</div>
                       <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{r.date} · {r.inspector && `Inspector: ${r.inspector}`}</div>
                     </div>
-                    <span style={{ padding: '3px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', background: r.status === 'completed' ? 'rgba(90,143,90,0.15)' : 'rgba(212,160,23,0.15)', color: r.status === 'completed' ? 'var(--leaf)' : 'var(--amber-light)' }}>{r.status}</span>
+                    <span style={{ padding: '3px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', background: r.status === 'completed' ? 'rgba(138,111,76,0.15)' : 'rgba(138,111,76,0.15)', color: r.status === 'completed' ? 'var(--leaf)' : 'var(--amber-light)' }}>{r.status}</span>
                   </div>
                 </div>
               ))}

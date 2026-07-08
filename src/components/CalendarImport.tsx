@@ -149,10 +149,10 @@ END:VCALENDAR`;
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center gap-3">
-            <Calendar className="text-blue-600" size={24} />
+            <Calendar className="text-[var(--text-secondary)]" size={24} />
             <div>
               <h2 className="text-xl font-semibold">Import Quotes from Calendar</h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-[var(--text-secondary)] mt-1">
                 Upload an ICS calendar file to import appointments as quotes
               </p>
             </div>
@@ -162,7 +162,7 @@ END:VCALENDAR`;
               onClose();
               resetModal();
             }}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-1 hover:bg-[var(--surface-overlay)] rounded-full transition-colors"
           >
             <X size={20} />
           </button>
@@ -175,19 +175,19 @@ END:VCALENDAR`;
               <div
                 className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                   dragActive
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-300 hover:border-gray-400'
+                    ? 'border-[var(--accent)] bg-[var(--surface-overlay)]'
+                    : 'border-[var(--border)] hover:border-[var(--border-bright)]'
                 }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
               >
-                <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <Upload className="mx-auto h-12 w-12 text-[var(--text-muted)] mb-4" />
+                <h3 className="text-lg font-medium text-[var(--text-primary)] mb-2">
                   {isProcessing ? 'Processing calendar file...' : 'Upload calendar file'}
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-[var(--text-secondary)] mb-4">
                   Drag and drop your ICS calendar file here, or click to browse
                 </p>
                 <input
@@ -200,19 +200,19 @@ END:VCALENDAR`;
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isProcessing}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  className="bg-[var(--ink)] text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-[var(--accent)] transition-colors disabled:opacity-50"
                 >
                   {isProcessing ? 'Processing...' : 'Choose ICS File'}
                 </button>
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-[var(--text-muted)] mt-2">
                   Supports ICS calendar files from Google Calendar, Outlook, Apple Calendar, etc.
                 </p>
               </div>
 
               {/* Instructions */}
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-medium text-blue-900 mb-2">How to export your calendar:</h4>
-                <div className="text-sm text-blue-700 space-y-2">
+              <div className="bg-[var(--surface-overlay)] p-4 rounded-lg">
+                <h4 className="font-medium text-[var(--text-primary)] mb-2">How to export your calendar:</h4>
+                <div className="text-sm text-[var(--text-secondary)] space-y-2">
                   <div>
                     <strong>Google Calendar:</strong> Settings → Import & Export → Export (downloads a ZIP file, extract the ICS file)
                   </div>
@@ -226,17 +226,17 @@ END:VCALENDAR`;
               </div>
 
               {/* Sample Download */}
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-[var(--surface-overlay)] p-4 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <Download className="text-gray-600 mt-1" size={20} />
+                  <Download className="text-[var(--text-secondary)] mt-1" size={20} />
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">Need a sample file?</h4>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <h4 className="font-medium text-[var(--text-primary)]">Need a sample file?</h4>
+                    <p className="text-sm text-[var(--text-secondary)] mb-3">
                       Download a sample ICS file to see the expected format for calendar imports.
                     </p>
                     <button
                       onClick={downloadSampleICS}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      className="text-[var(--text-secondary)] hover:opacity-80 text-sm font-medium"
                     >
                       Download Sample ICS File
                     </button>
@@ -245,9 +245,9 @@ END:VCALENDAR`;
               </div>
 
               {/* Supported Event Types */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-medium text-gray-900 mb-2">What events will be imported?</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
+              <div className="bg-[var(--surface-overlay)] p-4 rounded-lg">
+                <h4 className="font-medium text-[var(--text-primary)] mb-2">What events will be imported?</h4>
+                <ul className="text-sm text-[var(--text-secondary)] space-y-1">
                   <li>• Events with keywords: appointment, quote, assessment, inspection, consultation, visit, service</li>
                   <li>• Events with location information</li>
                   <li>• Events with detailed descriptions</li>
@@ -256,12 +256,12 @@ END:VCALENDAR`;
               </div>
 
               {error && (
-                <div className="bg-red-50 p-4 rounded-lg">
+                <div className="bg-[rgba(179,67,61,0.08)] p-4 rounded-lg">
                   <div className="flex items-start gap-3">
-                    <AlertCircle className="text-red-600 mt-1" size={20} />
+                    <AlertCircle className="text-[var(--danger)] mt-1" size={20} />
                     <div>
-                      <h4 className="font-medium text-red-900">Import Error</h4>
-                      <p className="text-sm text-red-700">{error}</p>
+                      <h4 className="font-medium text-[var(--text-primary)]">Import Error</h4>
+                      <p className="text-sm text-[var(--danger)]">{error}</p>
                     </div>
                   </div>
                 </div>
@@ -270,14 +270,14 @@ END:VCALENDAR`;
           ) : (
             <div className="space-y-4">
               {/* Import Summary */}
-              <div className="bg-green-50 p-4 rounded-lg">
+              <div className="bg-[var(--accent-soft)] p-4 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="text-green-600 mt-1" size={20} />
+                  <CheckCircle className="text-[var(--accent)] mt-1" size={20} />
                   <div>
-                    <h4 className="font-medium text-green-900">
+                    <h4 className="font-medium text-[var(--text-primary)]">
                       Found {importedQuotes.length} potential quotes in calendar
                     </h4>
-                    <p className="text-sm text-green-700">
+                    <p className="text-sm text-[var(--accent)]">
                       Review the appointments below and select which ones to import as quotes.
                     </p>
                   </div>
@@ -289,19 +289,19 @@ END:VCALENDAR`;
                 <div className="flex gap-2">
                   <button
                     onClick={selectAll}
-                    className="text-sm text-blue-600 hover:text-blue-800"
+                    className="text-sm text-[var(--text-secondary)] hover:opacity-80"
                   >
                     Select All
                   </button>
-                  <span className="text-gray-300">|</span>
+                  <span className="text-[var(--border-bright)]">|</span>
                   <button
                     onClick={selectNone}
-                    className="text-sm text-gray-600 hover:text-gray-800"
+                    className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   >
                     Select None
                   </button>
                 </div>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-[var(--text-secondary)]">
                   {selectedQuotes.size} of {importedQuotes.length} selected
                 </span>
               </div>
@@ -313,8 +313,8 @@ END:VCALENDAR`;
                     key={index}
                     className={`border rounded-lg p-4 cursor-pointer transition-colors ${
                       selectedQuotes.has(index)
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-[var(--accent)] bg-[var(--surface-overlay)]'
+                        : 'border-[var(--border)] hover:border-[var(--border)]'
                     }`}
                     onClick={() => toggleQuoteSelection(index)}
                   >
@@ -330,11 +330,11 @@ END:VCALENDAR`;
                           <h4 className="font-medium">
                             {quote.clientName || 'Unknown Client'}
                           </h4>
-                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                          <span className="bg-[var(--surface-overlay)] text-[var(--text-secondary)] px-2 py-1 rounded text-xs font-medium">
                             New
                           </span>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-[var(--text-secondary)]">
                           <div><strong>Date:</strong> {new Date(quote.scheduledDate).toLocaleDateString()}</div>
                           <div><strong>Time:</strong> {quote.scheduledTime}</div>
                           {quote.address && <div><strong>Address:</strong> {quote.address}</div>}
@@ -343,12 +343,12 @@ END:VCALENDAR`;
                         {quote.jobDescription.length > 0 && (
                           <div className="mt-2">
                             <strong className="text-sm">Services:</strong>
-                            <ul className="text-sm text-gray-600 mt-1">
+                            <ul className="text-sm text-[var(--text-secondary)] mt-1">
                               {quote.jobDescription.slice(0, 2).map((item, idx) => (
                                 <li key={idx}>• {item.description}</li>
                               ))}
                               {quote.jobDescription.length > 2 && (
-                                <li className="text-gray-500">
+                                <li className="text-[var(--text-muted)]">
                                   ... and {quote.jobDescription.length - 2} more
                                 </li>
                               )}
@@ -373,14 +373,14 @@ END:VCALENDAR`;
                   onClose();
                   resetModal();
                 }}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-[var(--border)] rounded-lg hover:bg-[var(--surface-overlay)] transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleImport}
                 disabled={selectedQuotes.size === 0}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-[var(--ink)] text-[var(--cream)] rounded-lg hover:bg-[var(--accent)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Import {selectedQuotes.size} Quotes
               </button>

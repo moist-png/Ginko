@@ -13,11 +13,11 @@ export const NotesSection: React.FC<NotesSectionProps> = ({ notes, readOnly = fa
   const [isCreating, setIsCreating] = useState(false);
 
   const categories = [
-    { value: 'observation', label: 'Observation', color: 'bg-blue-100 text-blue-800' },
-    { value: 'recommendation', label: 'Recommendation', color: 'bg-[rgba(90,143,90,0.15)] text-green-800' },
-    { value: 'safety', label: 'Safety Concern', color: 'bg-red-100 text-red-800' },
-    { value: 'treatment', label: 'Treatment', color: 'bg-yellow-100 text-yellow-800' },
-    { value: 'other', label: 'Other', color: 'bg-[var(--surface-overlay)] text-gray-800' }
+    { value: 'observation', label: 'Observation', color: 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]' },
+    { value: 'recommendation', label: 'Recommendation', color: 'bg-[rgba(138,111,76,0.15)] text-[var(--accent)]' },
+    { value: 'safety', label: 'Safety Concern', color: 'bg-[var(--surface-overlay)] text-[var(--danger)]' },
+    { value: 'treatment', label: 'Treatment', color: 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]' },
+    { value: 'other', label: 'Other', color: 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]' }
   ];
 
   const createNote = () => {
@@ -112,7 +112,7 @@ export const NotesSection: React.FC<NotesSectionProps> = ({ notes, readOnly = fa
                         </button>
                         <button
                           onClick={() => deleteNote(note.id)}
-                          className="p-1 text-red-500 hover:text-red-700 transition-colors"
+                          className="p-1 text-[var(--danger)] hover:opacity-80 transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -156,7 +156,7 @@ export const NotesSection: React.FC<NotesSectionProps> = ({ notes, readOnly = fa
                   type="text"
                   value={editingNote.title}
                   onChange={(e) => setEditingNote({ ...editingNote, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="Enter note title"
                 />
               </div>
@@ -168,7 +168,7 @@ export const NotesSection: React.FC<NotesSectionProps> = ({ notes, readOnly = fa
                 <select
                   value={editingNote.category}
                   onChange={(e) => setEditingNote({ ...editingNote, category: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 >
                   {categories.map(category => (
                     <option key={category.value} value={category.value}>
@@ -185,7 +185,7 @@ export const NotesSection: React.FC<NotesSectionProps> = ({ notes, readOnly = fa
                 <textarea
                   value={editingNote.content}
                   onChange={(e) => setEditingNote({ ...editingNote, content: e.target.value })}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={8}
                   placeholder="Enter your note content..."
                 />

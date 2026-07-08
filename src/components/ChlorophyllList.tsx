@@ -31,19 +31,19 @@ export const ChlorophyllList: React.FC<ChlorophyllListProps> = ({
 
   const getMaturityColor = (maturity: ChlorophyllReading['treeMaturity']) => {
     switch (maturity) {
-      case 'Juvenile': return 'bg-[rgba(90,143,90,0.15)] text-green-800';
-      case 'Semi mature': return 'bg-blue-100 text-blue-800';
-      case 'Mature': return 'bg-yellow-100 text-yellow-800';
-      case 'Senescent': return 'bg-red-100 text-red-800';
-      default: return 'bg-[var(--surface-overlay)] text-gray-800';
+      case 'Juvenile': return 'bg-[rgba(138,111,76,0.15)] text-[var(--accent)]';
+      case 'Semi mature': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      case 'Mature': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      case 'Senescent': return 'bg-[var(--surface-overlay)] text-[var(--danger)]';
+      default: return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
     }
   };
 
   const getChlorophyllColor = (level: number) => {
     if (level >= 40) return 'text-[var(--leaf)] font-semibold';
-    if (level >= 30) return 'text-yellow-600 font-semibold';
-    if (level >= 20) return 'text-orange-600 font-semibold';
-    return 'text-red-600 font-semibold';
+    if (level >= 30) return 'text-[var(--text-secondary)] font-semibold';
+    if (level >= 20) return 'text-[var(--text-secondary)] font-semibold';
+    return 'text-[var(--danger)] font-semibold';
   };
 
   const handleSort = (field: SortField) => {
@@ -103,7 +103,7 @@ export const ChlorophyllList: React.FC<ChlorophyllListProps> = ({
       onClick={() => handleSort(field)}
       className={`flex items-center gap-1 px-2 py-1 rounded text-sm font-medium transition-colors ${
         sortField === field
-          ? 'bg-[rgba(90,143,90,0.15)] text-[var(--leaf)]'
+          ? 'bg-[rgba(138,111,76,0.15)] text-[var(--leaf)]'
           : 'text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)]'
       }`}
     >
@@ -143,7 +143,7 @@ export const ChlorophyllList: React.FC<ChlorophyllListProps> = ({
           placeholder="Search by species, location, or maturity..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
       </div>
 
@@ -187,7 +187,7 @@ export const ChlorophyllList: React.FC<ChlorophyllListProps> = ({
                       {latest.treeSpecies || 'Unknown Species'}
                     </h3>
                     {count > 1 && (
-                      <span className="flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                      <span className="flex items-center gap-1 bg-[var(--surface-overlay)] text-[var(--text-secondary)] px-2 py-1 rounded-full text-xs font-medium">
                         <History size={12} />
                         {count} readings
                       </span>

@@ -75,7 +75,7 @@ export const BoardThread: React.FC<BoardThreadProps> = ({ contextType, contextId
       {!compact && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <MessageSquare size={18} color="var(--leaf)" />
-          <h3 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)' }}>
+          <h3 style={{ fontFamily: 'Newsreader, serif', fontSize: '18px', color: 'var(--text-primary)' }}>
             {contextType === 'announcement' ? 'Crew Board' : 'Discussion'}
           </h3>
         </div>
@@ -92,7 +92,7 @@ export const BoardThread: React.FC<BoardThreadProps> = ({ contextType, contextId
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {posts.map(post => (
-            <div key={post.id} className="card" style={{ padding: '14px 16px', borderColor: post.pinned ? 'rgba(212,160,23,0.4)' : undefined, background: post.pinned ? 'rgba(212,160,23,0.06)' : undefined }}>
+            <div key={post.id} className="card" style={{ padding: '14px 16px', borderColor: post.pinned ? 'rgba(138,111,76,0.4)' : undefined, background: post.pinned ? 'rgba(138,111,76,0.06)' : undefined }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px', marginBottom: '6px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                   <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{authorName(post.author_profile_id)}</span>
@@ -106,7 +106,7 @@ export const BoardThread: React.FC<BoardThreadProps> = ({ contextType, contextId
                     </button>
                   )}
                   {(post.author_profile_id === me?.id || canManage) && (
-                    <button onClick={() => handleDelete(post)} title="Delete" style={{ padding: '5px', borderRadius: '6px', background: 'transparent', border: '1px solid rgba(180,60,60,0.3)', color: '#e88', cursor: 'pointer' }}>
+                    <button onClick={() => handleDelete(post)} title="Delete" style={{ padding: '5px', borderRadius: '6px', background: 'transparent', border: '1px solid rgba(180,60,60,0.3)', color: '#b3433d', cursor: 'pointer' }}>
                       <Trash2 size={12} />
                     </button>
                   )}
@@ -117,7 +117,7 @@ export const BoardThread: React.FC<BoardThreadProps> = ({ contextType, contextId
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid var(--border)' }}>
                   <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{readCounts[post.id] ?? 0} of {teamMembers.filter(m => m.active).length} acknowledged</span>
                   {!readByMe[post.id] ? (
-                    <button onClick={() => handleMarkRead(post.id)} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: 600, color: 'var(--leaf)', background: 'transparent', border: '1px solid rgba(90,143,90,0.35)', borderRadius: '999px', padding: '3px 9px', cursor: 'pointer' }}>
+                    <button onClick={() => handleMarkRead(post.id)} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: 600, color: 'var(--leaf)', background: 'transparent', border: '1px solid rgba(138,111,76,0.35)', borderRadius: '999px', padding: '3px 9px', cursor: 'pointer' }}>
                       <CheckCircle2 size={11} /> Mark as read
                     </button>
                   ) : (

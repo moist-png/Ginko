@@ -205,7 +205,7 @@ export const SpeciesIdentifier: React.FC<SpeciesIdentifierProps> = ({ treeData, 
             onClick={() => setOrgan(o.id)}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
               organ === o.id
-                ? 'bg-[rgba(90,143,90,0.15)] text-[var(--leaf)] border-[var(--border-bright)]'
+                ? 'bg-[rgba(138,111,76,0.15)] text-[var(--leaf)] border-[var(--border-bright)]'
                 : 'text-[var(--text-secondary)] border-[var(--border)] hover:text-[var(--text-primary)]'
             }`}
           >
@@ -224,7 +224,7 @@ export const SpeciesIdentifier: React.FC<SpeciesIdentifierProps> = ({ treeData, 
       </button>
 
       {error && (
-        <div className="flex items-start gap-2 rounded-lg border border-[rgba(212,160,23,0.3)] bg-[rgba(212,160,23,0.12)] p-3 mb-4">
+        <div className="flex items-start gap-2 rounded-lg border border-[rgba(138,111,76,0.3)] bg-[rgba(138,111,76,0.12)] p-3 mb-4">
           <AlertTriangle size={16} className="text-[var(--amber-light)] mt-0.5 shrink-0" />
           <p className="text-sm text-[var(--text-secondary)]">{error}</p>
         </div>
@@ -242,7 +242,7 @@ export const SpeciesIdentifier: React.FC<SpeciesIdentifierProps> = ({ treeData, 
               onClick={() => { setSelected(i); setSaved(false); }}
               className={`w-full text-left rounded-lg border p-3 transition-colors ${
                 selected === i
-                  ? 'border-[var(--border-bright)] bg-[rgba(90,143,90,0.12)]'
+                  ? 'border-[var(--border-bright)] bg-[rgba(138,111,76,0.12)]'
                   : 'border-[var(--border)] hover:border-[var(--border-bright)]'
               }`}
             >

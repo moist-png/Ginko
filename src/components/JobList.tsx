@@ -19,21 +19,27 @@ interface JobListProps {
 type SortField = 'date' | 'clientName' | 'status' | 'jobType' | 'timeSpent' | 'totalCost';
 type SortDirection = 'asc' | 'desc';
 
+// Neutral badge treatment for every job type — a deliberate move away from
+// hue-coding to keep the single accent colour meaningful (see design handoff).
+const NEUTRAL_BADGE = { bg: 'var(--surface-overlay)', color: 'var(--text-secondary)', border: 'var(--border)' };
+
 const JOB_TYPE_STYLES: Record<Job['jobType'], { bg: string; color: string; border: string }> = {
-  assessment: { bg: 'rgba(120,80,180,0.15)', color: '#bb99ee', border: 'rgba(120,80,180,0.3)' },
-  pruning: { bg: 'rgba(90,143,90,0.15)', color: 'var(--leaf)', border: 'rgba(90,143,90,0.3)' },
-  removal: { bg: 'rgba(180,60,60,0.15)', color: '#e88', border: 'rgba(180,60,60,0.3)' },
-  treatment: { bg: 'rgba(60,120,200,0.15)', color: '#88aaee', border: 'rgba(60,120,200,0.3)' },
-  consultation: { bg: 'rgba(80,140,180,0.15)', color: '#88ccee', border: 'rgba(80,140,180,0.3)' },
-  emergency: { bg: 'rgba(200,100,30,0.15)', color: '#f0a060', border: 'rgba(200,100,30,0.3)' },
-  other: { bg: 'rgba(100,100,100,0.15)', color: 'var(--text-secondary)', border: 'rgba(100,100,100,0.2)' },
+  assessment: NEUTRAL_BADGE,
+  pruning: NEUTRAL_BADGE,
+  removal: NEUTRAL_BADGE,
+  treatment: NEUTRAL_BADGE,
+  consultation: NEUTRAL_BADGE,
+  emergency: NEUTRAL_BADGE,
+  other: NEUTRAL_BADGE,
 };
 
+// Status keeps a single functional exception — cancelled reads slightly muted,
+// everything else (including completed) stays neutral so the accent stays reserved for state.
 const STATUS_STYLES: Record<Job['status'], { bg: string; color: string }> = {
-  scheduled: { bg: 'rgba(212,160,23,0.15)', color: 'var(--amber-light)' },
-  'in-progress': { bg: 'rgba(60,120,200,0.15)', color: '#88aaee' },
-  completed: { bg: 'rgba(90,143,90,0.15)', color: 'var(--leaf)' },
-  cancelled: { bg: 'rgba(100,100,100,0.15)', color: 'var(--text-muted)' },
+  scheduled: { bg: 'var(--surface-overlay)', color: 'var(--text-secondary)' },
+  'in-progress': { bg: 'var(--accent-soft)', color: 'var(--accent)' },
+  completed: { bg: 'var(--surface-overlay)', color: 'var(--text-secondary)' },
+  cancelled: { bg: 'var(--surface-overlay)', color: 'var(--text-muted)' },
 };
 
 export const JobList: React.FC<JobListProps> = ({ jobs, teamMembers, onSelectJob, onCreateJob, searchQuery, onSearchChange }) => {
@@ -67,8 +73,8 @@ export const JobList: React.FC<JobListProps> = ({ jobs, teamMembers, onSelectJob
     <button onClick={() => handleSort(field)} style={{
       display: 'flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '6px',
       fontSize: '12px', fontWeight: '500', cursor: 'pointer', transition: 'all 0.15s',
-      background: sortField === field ? 'rgba(90,143,90,0.15)' : 'transparent',
-      border: sortField === field ? '1px solid rgba(90,143,90,0.3)' : '1px solid var(--border)',
+      background: sortField === field ? 'rgba(138,111,76,0.15)' : 'transparent',
+      border: sortField === field ? '1px solid rgba(138,111,76,0.3)' : '1px solid var(--border)',
       color: sortField === field ? 'var(--leaf)' : 'var(--text-muted)',
     }}>
       {children} <ArrowUpDown size={12} />
@@ -79,7 +85,7 @@ export const JobList: React.FC<JobListProps> = ({ jobs, teamMembers, onSelectJob
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>Job Management</h1>
+          <h1 style={{ fontFamily: 'Newsreader, serif', fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>Job Management</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{jobs.length} {jobs.length === 1 ? 'job' : 'jobs'} total</p>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
@@ -106,7 +112,7 @@ export const JobList: React.FC<JobListProps> = ({ jobs, teamMembers, onSelectJob
             <div style={{ width: '56px', height: '56px', borderRadius: '14px', background: 'var(--surface-raised)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
               <Briefcase size={24} color="var(--text-muted)" />
             </div>
-            <h3 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '20px', color: 'var(--text-primary)', marginBottom: '8px' }}>No jobs found</h3>
+            <h3 style={{ fontFamily: 'Newsreader, serif', fontSize: '20px', color: 'var(--text-primary)', marginBottom: '8px' }}>No jobs found</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '20px' }}>{searchQuery ? 'Try different search terms' : 'Create your first job record'}</p>
             {!searchQuery && canEdit && <button onClick={onCreateJob} className="btn-primary"><Plus size={16} /> Create First Job</button>}
           </div>

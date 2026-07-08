@@ -23,6 +23,7 @@ import { MessageBoard } from './components/MessageBoard';
 import { NotificationBell } from './components/NotificationBell';
 import { db, getPendingCount, syncQueue } from './utils/offline';
 import { fromDbSite, fromDbReport, fromDbJob, fromDbQuote, fromDbRisk } from './utils/mappers';
+import ginkgoMark from './assets/ginkgo-mark.png';
 import {
   Home, TreePine, Shield, FileText, Menu, X,
   LogOut, Trash2, Users, LayoutDashboard, WifiOff, MessageSquare
@@ -122,9 +123,9 @@ function App() {
   };
 
   if (loading) return (
-    <div style={{ minHeight: '100vh', background: 'var(--forest)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--forest-mid)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-        <TreePine size={32} color="var(--leaf)" style={{ margin: '0 auto 12px' }} />
+        <img src={ginkgoMark} alt="Ginkgo" style={{ height: '44px', margin: '0 auto 12px' }} />
         <p style={{ fontSize: '14px' }}>Loading Ginkgo...</p>
       </div>
     </div>
@@ -208,20 +209,19 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen grain" style={{ background: 'var(--forest)' }}>
-      <header style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'linear-gradient(135deg, var(--canopy), var(--forest-light))', border: '1px solid var(--border-bright)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <TreePine size={20} color="var(--leaf)" />
-              </div>
-              <span style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>Ginkgo</span>
+    <div className="min-h-screen" style={{ background: 'var(--forest)' }}>
+      <header style={{ position: 'relative', overflow: 'hidden', background: 'var(--forest-mid)', borderBottom: '1px solid var(--border)' }}>
+        <div className="grain-surface" />
+        <div style={{ position: 'relative', maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '70px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <img src={ginkgoMark} alt="Ginkgo" style={{ height: '40px', flexShrink: 0 }} />
+              <span style={{ fontFamily: 'Newsreader, serif', fontSize: '20px', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>Ginkgo</span>
             </div>
 
             <nav className="hidden md:flex" style={{ gap: '4px' }}>
               {navItems.map(({ view, icon: Icon, label }) => (
-                <button key={view} onClick={() => handleViewChange(view)} style={{ display: 'flex', alignItems: 'center', gap: '7px', padding: '7px 14px', borderRadius: '8px', fontSize: '14px', fontWeight: '500', transition: 'all 0.15s', border: currentView === view ? '1px solid rgba(90,143,90,0.35)' : '1px solid transparent', background: currentView === view ? 'rgba(90,143,90,0.15)' : 'transparent', color: currentView === view ? 'var(--leaf)' : 'var(--text-secondary)', cursor: 'pointer' }}>
+                <button key={view} onClick={() => handleViewChange(view)} style={{ display: 'flex', alignItems: 'center', gap: '7px', padding: '8px 14px', borderRadius: '7px', fontSize: '14px', fontWeight: '500', transition: 'all 0.15s', border: 'none', background: currentView === view ? 'var(--accent-soft)' : 'transparent', color: currentView === view ? 'var(--accent)' : 'var(--text-secondary)', cursor: 'pointer' }}>
                   <Icon size={16} />{label}
                 </button>
               ))}
@@ -231,13 +231,13 @@ function App() {
               {/* Unsynced-data badge — only shown when offline or there are
                   operations still waiting to sync. Nothing appears when all is well. */}
               {(!online || pendingSync > 0) && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', background: 'rgba(180,60,60,0.1)', border: '1px solid rgba(180,60,60,0.2)', color: '#e88' }} title={online ? `${pendingSync} change(s) waiting to sync` : 'Offline — changes will sync when reconnected'}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 10px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', background: 'rgba(179,67,61,0.1)', border: '1px solid rgba(179,67,61,0.2)', color: 'var(--danger)' }} title={online ? `${pendingSync} change(s) waiting to sync` : 'Offline — changes will sync when reconnected'}>
                   <WifiOff size={12} />
-                  {pendingSync > 0 && <span style={{ background: 'var(--amber)', color: 'var(--forest)', borderRadius: '999px', padding: '1px 5px', fontSize: '10px' }}>{pendingSync}</span>}
+                  {pendingSync > 0 && <span style={{ background: 'var(--danger)', color: 'var(--cream)', borderRadius: '999px', padding: '1px 5px', fontSize: '10px' }}>{pendingSync}</span>}
                 </div>
               )}
 
-              <button onClick={() => setShowRecentlyDeleted(true)} className="hidden md:flex" style={{ alignItems: 'center', padding: '7px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-muted)', cursor: 'pointer' }} title="Recently Deleted">
+              <button onClick={() => setShowRecentlyDeleted(true)} className="hidden md:flex" style={{ alignItems: 'center', justifyContent: 'center', width: '34px', height: '34px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-muted)', cursor: 'pointer' }} title="Recently Deleted">
                 <Trash2 size={15} />
               </button>
 
@@ -245,8 +245,8 @@ function App() {
 
               {session?.user && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--canopy), var(--forest-light))', border: '1px solid var(--border-bright)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--leaf)' }}>{(session.user.email || 'U').charAt(0).toUpperCase()}</span>
+                  <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--forest-light)', border: '1px solid var(--border-bright)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>{(session.user.email || 'U').charAt(0).toUpperCase()}</span>
                   </div>
                   <button onClick={handleLogout} className="hidden md:flex" style={{ alignItems: 'center', gap: '6px', padding: '6px 10px', borderRadius: '6px', fontSize: '12px', color: 'var(--text-muted)', background: 'transparent', border: '1px solid transparent', cursor: 'pointer' }} title="Logout">
                     <LogOut size={14} />
@@ -264,7 +264,7 @@ function App() {
             <div className="md:hidden" style={{ paddingBottom: '16px', borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
               <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 {navItems.map(({ view, icon: Icon, label }) => (
-                  <button key={view} onClick={() => handleViewChange(view)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: '500', cursor: 'pointer', border: currentView === view ? '1px solid rgba(90,143,90,0.35)' : '1px solid transparent', background: currentView === view ? 'rgba(90,143,90,0.15)' : 'transparent', color: currentView === view ? 'var(--leaf)' : 'var(--text-secondary)', transition: 'all 0.15s' }}>
+                  <button key={view} onClick={() => handleViewChange(view)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: '500', cursor: 'pointer', border: 'none', background: currentView === view ? 'var(--accent-soft)' : 'transparent', color: currentView === view ? 'var(--accent)' : 'var(--text-secondary)', transition: 'all 0.15s' }}>
                     <Icon size={18} />{label}
                   </button>
                 ))}
@@ -290,7 +290,7 @@ function App() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)' }}>
               {[{ id: 'sites', label: `Site Registry (${sites.length})` }, { id: 'registry', label: `Tree Registry (${reports.filter(r => !r.siteId).length})`, icon: true }].map(({ id, label, icon }) => (
-                <button key={id} onClick={() => setSitesSubView(id as any)} style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', background: 'transparent', border: 'none', borderBottom: sitesSubView === id ? '2px solid var(--moss)' : '2px solid transparent', color: sitesSubView === id ? 'var(--leaf)' : 'var(--text-muted)', marginBottom: '-1px', transition: 'all 0.15s' }}>
+                <button key={id} onClick={() => setSitesSubView(id as any)} style={{ padding: '8px 16px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', background: 'transparent', border: 'none', borderBottom: sitesSubView === id ? '2px solid var(--accent)' : '2px solid transparent', color: sitesSubView === id ? 'var(--accent)' : 'var(--text-muted)', marginBottom: '-1px', transition: 'all 0.15s' }}>
                   {label}
                 </button>
               ))}

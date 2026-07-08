@@ -55,12 +55,12 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos, readOnly = f
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      overview: 'bg-blue-100 text-blue-800',
+      overview: 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]',
       trunk: 'bg-brown-100 text-brown-800',
-      crown: 'bg-[rgba(90,143,90,0.15)] text-green-800',
-      roots: 'bg-yellow-100 text-yellow-800',
-      damage: 'bg-red-100 text-red-800',
-      other: 'bg-[var(--surface-overlay)] text-gray-800'
+      crown: 'bg-[rgba(138,111,76,0.15)] text-[var(--accent)]',
+      roots: 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]',
+      damage: 'bg-[var(--surface-overlay)] text-[var(--danger)]',
+      other: 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]'
     };
     return colors[category as keyof typeof colors] || colors.other;
   };
@@ -125,7 +125,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos, readOnly = f
                       </button>
                       <button
                         onClick={() => deletePhoto(photo.id)}
-                        className="p-1 bg-[var(--surface-raised)] rounded-full shadow-md hover:bg-[var(--forest)] transition-colors text-red-600"
+                        className="p-1 bg-[var(--surface-raised)] rounded-full shadow-md hover:bg-[var(--forest)] transition-colors text-[var(--danger)]"
                       >
                         <X size={16} />
                       </button>
@@ -200,7 +200,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos, readOnly = f
                 <textarea
                   value={editingPhoto.caption}
                   onChange={(e) => setEditingPhoto({ ...editingPhoto, caption: e.target.value })}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={3}
                   placeholder="Add a caption..."
                 />
@@ -213,7 +213,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos, readOnly = f
                 <select
                   value={editingPhoto.category}
                   onChange={(e) => setEditingPhoto({ ...editingPhoto, category: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 >
                   {categories.map(category => (
                     <option key={category.value} value={category.value}>

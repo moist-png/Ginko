@@ -147,14 +147,14 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                 </button>
                 <button
                   onClick={() => setShowXeroModal(true)}
-                  className="flex items-center gap-2 border border-blue-600 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                  className="flex items-center gap-2 border border-[var(--border)] text-[var(--text-secondary)] px-4 py-2 rounded-lg hover:bg-[var(--surface-overlay)] transition-colors"
                 >
                   <ExternalLink size={20} />
                   Send to Xero
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="flex items-center gap-2 bg-red-600 text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                  className="flex items-center gap-2 bg-[var(--danger)] text-[var(--cream)] px-4 py-2 rounded-lg hover:opacity-90 transition-colors"
                 >
                   <Trash2 size={20} />
                   Delete
@@ -180,7 +180,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
             </button>
           </div>
         </div>
-        {saveError && <p className="text-sm text-[#e88] mt-2">{saveError}</p>}
+        {saveError && <p className="text-sm text-[#b3433d] mt-2">{saveError}</p>}
       </div>
 
       <div className="flex-1 overflow-auto p-6">
@@ -198,7 +198,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                   type="text"
                   value={editingQuote.clientName}
                   onChange={(e) => updateQuote('clientName', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="Enter client name"
                 />
               </div>
@@ -211,7 +211,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                   type="text"
                   value={editingQuote.address}
                   onChange={(e) => updateQuote('address', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="Enter property address"
                 />
               </div>
@@ -225,7 +225,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                     type="tel"
                     value={editingQuote.mobile}
                     onChange={(e) => updateQuote('mobile', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="Mobile number"
                   />
                 </div>
@@ -238,7 +238,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                     type="text"
                     value={editingQuote.siteContact}
                     onChange={(e) => updateQuote('siteContact', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="Site contact person"
                   />
                 </div>
@@ -262,7 +262,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                   type="date"
                   value={editingQuote.scheduledDate}
                   onChange={(e) => updateQuote('scheduledDate', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 />
               </div>
 
@@ -273,7 +273,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                 <select
                   value={editingQuote.scheduledTime}
                   onChange={(e) => updateQuote('scheduledTime', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 >
                   {timeOptions.map(time => (
                     <option key={time} value={time}>
@@ -307,14 +307,14 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                   <textarea
                     value={item.description}
                     onChange={(e) => updateLineItem(item.id, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                    className="flex-1 px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                     rows={2}
                     placeholder="Enter job description item..."
                   />
                   {editingQuote.jobDescription.length > 1 && (
                     <button
                       onClick={() => removeLineItem(item.id)}
-                      className="text-red-600 hover:text-red-800 transition-colors p-1"
+                      className="text-[var(--danger)] hover:opacity-80 transition-colors p-1"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -336,7 +336,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                 <textarea
                   value={editingQuote.additionalEquipment}
                   onChange={(e) => updateQuote('additionalEquipment', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={4}
                   placeholder="List any additional equipment needed for the job..."
                 />
@@ -349,7 +349,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
                 <textarea
                   value={editingQuote.accessParking}
                   onChange={(e) => updateQuote('accessParking', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={4}
                   placeholder="Describe access requirements, parking arrangements, site constraints..."
                 />
@@ -404,7 +404,7 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
               <select
                 value={editingQuote.status}
                 onChange={(e) => updateQuote('status', e.target.value as any)}
-                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
               >
                 <option value="new">New</option>
                 <option value="scheduled">Scheduled</option>
@@ -413,14 +413,14 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
               <div className="mt-3 flex items-center gap-2">
                 <span className="text-sm text-[var(--text-secondary)]">Current status:</span>
                 <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${
-                  editingQuote.status === 'new' ? 'bg-blue-100 text-blue-800' :
-                  editingQuote.status === 'scheduled' ? 'bg-purple-100 text-purple-800' :
-                  'bg-[rgba(90,143,90,0.15)] text-green-800'
+                  editingQuote.status === 'new' ? 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]' :
+                  editingQuote.status === 'scheduled' ? 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]' :
+                  'bg-[rgba(138,111,76,0.15)] text-[var(--accent)]'
                 }`}>
                   <div className={`w-2 h-2 rounded-full ${
-                    editingQuote.status === 'new' ? 'bg-blue-500' :
-                    editingQuote.status === 'scheduled' ? 'bg-purple-500' :
-                    'bg-green-500'
+                    editingQuote.status === 'new' ? 'bg-[var(--text-muted)]' :
+                    editingQuote.status === 'scheduled' ? 'bg-[var(--text-muted)]' :
+                    'bg-[var(--accent-soft)]0'
                   }`}></div>
                   {editingQuote.status.charAt(0).toUpperCase() + editingQuote.status.slice(1)}
                 </div>

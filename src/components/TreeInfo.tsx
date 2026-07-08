@@ -18,11 +18,11 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
 
   return (
     <div className="p-6 max-w-2xl">
-      <h2 className="text-xl font-semibold mb-6">Tree Information</h2>
+      <h2 className="mb-6" style={{ fontFamily: 'Newsreader, serif', fontWeight: 500, fontSize: '23px', color: 'var(--text-primary)' }}>Tree Information</h2>
       
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+          <label>
             Tree Number
           </label>
           <input
@@ -30,14 +30,14 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
             value={data.treeNumber}
             disabled={readOnly}
             onChange={(e) => handleChange('treeNumber', e.target.value)}
-            className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+            className="input-field disabled:cursor-not-allowed"
             placeholder="e.g., T001, A-15"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               Scientific Name
             </label>
             <input
@@ -45,13 +45,13 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
               value={data.species}
               disabled={readOnly}
               onChange={(e) => handleChange('species', e.target.value)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
               placeholder="e.g., Quercus alba"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               Common Name
             </label>
             <input
@@ -59,14 +59,14 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
               value={data.commonName}
               disabled={readOnly}
               onChange={(e) => handleChange('commonName', e.target.value)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
               placeholder="e.g., White Oak"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+          <label>
             Location Description
           </label>
           <input
@@ -74,14 +74,14 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
             value={data.location}
             disabled={readOnly}
             onChange={(e) => handleChange('location', e.target.value)}
-            className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+            className="input-field disabled:cursor-not-allowed"
             placeholder="e.g., Front yard, 6 metres from house"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               DBH (cm)
             </label>
             <input
@@ -89,14 +89,14 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
               value={data.dbh}
               disabled={readOnly}
               onChange={(e) => handleChange('dbh', parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
               placeholder="0.0"
               step="0.1"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               Height (m)
             </label>
             <input
@@ -104,14 +104,14 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
               value={data.height}
               disabled={readOnly}
               onChange={(e) => handleChange('height', parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
               placeholder="0.0"
               step="0.1"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               Extension Growth (mm)
             </label>
             <input
@@ -119,7 +119,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
               value={data.extensionGrowth}
               disabled={readOnly}
               onChange={(e) => handleChange('extensionGrowth', parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
               placeholder="0"
               step="1"
             />
@@ -128,7 +128,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               Canopy Spread North-South (m)
             </label>
             <input
@@ -136,14 +136,14 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
               value={data.canopySpreadNS}
               disabled={readOnly}
               onChange={(e) => handleChange('canopySpreadNS', parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
               placeholder="0.0"
               step="0.1"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               Canopy Spread East-West (m)
             </label>
             <input
@@ -151,7 +151,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
               value={data.canopySpreadEW}
               disabled={readOnly}
               onChange={(e) => handleChange('canopySpreadEW', parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
               placeholder="0.0"
               step="0.1"
             />
@@ -159,7 +159,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+          <label>
             Canopy Cover (%)
           </label>
           <input
@@ -167,7 +167,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
             value={data.canopyCover}
             disabled={readOnly}
             onChange={(e) => handleChange('canopyCover', parseFloat(e.target.value) || 0)}
-            className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+            className="input-field disabled:cursor-not-allowed"
             placeholder="0"
             min="0"
             max="100"
@@ -177,14 +177,14 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               Tree Health
             </label>
             <select
               value={data.treeHealth}
               disabled={readOnly}
               onChange={(e) => handleChange('treeHealth', e.target.value)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
             >
               <option value="Excellent">Excellent</option>
               <option value="Good">Good</option>
@@ -195,14 +195,14 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               Structure
             </label>
             <select
               value={data.structure}
               disabled={readOnly}
               onChange={(e) => handleChange('structure', e.target.value)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
             >
               <option value="Excellent">Excellent</option>
               <option value="Good">Good</option>
@@ -213,14 +213,14 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label>
               Wound Wood Development
             </label>
             <select
               value={data.woundWoodDevelopment}
               disabled={readOnly}
               onChange={(e) => handleChange('woundWoodDevelopment', e.target.value)}
-              className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-[var(--surface-overlay)] disabled:cursor-not-allowed"
+              className="input-field disabled:cursor-not-allowed"
             >
               <option value="Excellent">Excellent</option>
               <option value="Good">Good</option>

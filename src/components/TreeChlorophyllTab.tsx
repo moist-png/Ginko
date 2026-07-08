@@ -24,9 +24,9 @@ const emptyForm = () => ({
 
 const chlorophyllColor = (level: number) => {
   if (level >= 40) return 'text-[var(--leaf)]';
-  if (level >= 30) return 'text-yellow-500';
-  if (level >= 20) return 'text-orange-500';
-  return 'text-red-500';
+  if (level >= 30) return 'text-[var(--text-secondary)]';
+  if (level >= 20) return 'text-[var(--text-secondary)]';
+  return 'text-[var(--danger)]';
 };
 
 const chlorophyllStatus = (level: number) => {
@@ -131,7 +131,7 @@ export const TreeChlorophyllTab: React.FC<TreeChlorophyllTabProps> = ({
         </p>
       )}
 
-      {error && <p className="text-sm text-[#e88] mb-4">{error}</p>}
+      {error && <p className="text-sm text-[#b3433d] mb-4">{error}</p>}
 
       {/* Latest reading summary */}
       {latest && (
@@ -162,7 +162,7 @@ export const TreeChlorophyllTab: React.FC<TreeChlorophyllTabProps> = ({
                   type="date"
                   value={form.date}
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 />
               </div>
               <div>
@@ -170,7 +170,7 @@ export const TreeChlorophyllTab: React.FC<TreeChlorophyllTabProps> = ({
                 <select
                   value={form.treeMaturity}
                   onChange={(e) => setForm({ ...form, treeMaturity: e.target.value as ChlorophyllReading['treeMaturity'] })}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 >
                   <option value="Juvenile">Juvenile</option>
                   <option value="Semi mature">Semi mature</option>
@@ -186,7 +186,7 @@ export const TreeChlorophyllTab: React.FC<TreeChlorophyllTabProps> = ({
                   type="number"
                   value={form.chlorophyllLevel}
                   onChange={(e) => setForm({ ...form, chlorophyllLevel: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   step="0.1" min="0" max="100" placeholder="0.0"
                 />
                 {form.chlorophyllLevel > 0 && (
@@ -202,7 +202,7 @@ export const TreeChlorophyllTab: React.FC<TreeChlorophyllTabProps> = ({
                   type="number"
                   value={form.extensionGrowth}
                   onChange={(e) => setForm({ ...form, extensionGrowth: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   step="1" min="0" placeholder="0"
                 />
               </div>
@@ -212,7 +212,7 @@ export const TreeChlorophyllTab: React.FC<TreeChlorophyllTabProps> = ({
               <textarea
                 value={form.notes}
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                 rows={3} placeholder="Observations, weather conditions, etc."
               />
             </div>
@@ -267,7 +267,7 @@ export const TreeChlorophyllTab: React.FC<TreeChlorophyllTabProps> = ({
                   {!readOnly && (
                     <button
                       onClick={() => setPendingDelete(r.id)}
-                      className="text-[var(--text-muted)] hover:text-red-500 transition-colors"
+                      className="text-[var(--text-muted)] hover:text-[var(--danger)] transition-colors"
                       title="Delete reading"
                     >
                       <Trash2 size={16} />

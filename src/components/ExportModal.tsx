@@ -136,7 +136,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                     key={format.id}
                     className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
                       selectedFormat === format.id
-                        ? 'border-blue-500 bg-blue-50'
+                        ? 'border-[var(--accent)] bg-[var(--surface-overlay)]'
                         : 'border-[var(--border)] hover:border-[var(--border)]'
                     }`}
                   >
@@ -170,7 +170,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                   type="email"
                   value={emailData.to}
                   onChange={(e) => setEmailData(prev => ({ ...prev, to: e.target.value }))}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="recipient@email.com"
                 />
               </div>
@@ -182,7 +182,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                   type="text"
                   value={emailData.subject}
                   onChange={(e) => setEmailData(prev => ({ ...prev, subject: e.target.value }))}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 />
               </div>
               <div>
@@ -192,7 +192,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 <textarea
                   value={emailData.body}
                   onChange={(e) => setEmailData(prev => ({ ...prev, body: e.target.value }))}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={4}
                 />
               </div>
@@ -205,14 +205,14 @@ export const ExportModal: React.FC<ExportModalProps> = ({
               <>
                 <button
                   onClick={handleDownload}
-                  className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 bg-[var(--ink)] text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-[var(--accent)] transition-colors"
                 >
                   <Download size={16} />
                   Download
                 </button>
                 <button
                   onClick={() => setShowEmailForm(true)}
-                  className="flex-1 flex items-center justify-center gap-2 border border-blue-600 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 border border-[var(--border)] text-[var(--text-secondary)] px-4 py-2 rounded-lg hover:bg-[var(--surface-overlay)] transition-colors"
                 >
                   <Mail size={16} />
                   Email
@@ -229,7 +229,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 <button
                   onClick={handleEmail}
                   disabled={!emailData.to || isSending}
-                  className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 flex items-center justify-center gap-2 bg-[var(--ink)] text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-[var(--accent)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSending ? (
                     <>

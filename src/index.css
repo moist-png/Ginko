@@ -1,34 +1,51 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --forest: #1a2e1a;
-  --forest-mid: #243524;
-  --forest-light: #2d4a2d;
-  --canopy: #3d6b3d;
-  --moss: #5a8f5a;
-  --leaf: #7ab87a;
-  --sage: #a8c8a8;
-  --bark: #8b6914;
-  --amber: #d4a017;
-  --amber-light: #f0c040;
-  --cream: #f5f0e8;
-  --parchment: #ede8dc;
-  --text-primary: #f0ede6;
-  --text-secondary: #b8b0a0;
-  --text-muted: #7a7468;
-  --surface: #1e2d1e;
-  --surface-raised: #243324;
-  --surface-overlay: #2a3d2a;
-  --border: rgba(90, 143, 90, 0.2);
-  --border-bright: rgba(90, 143, 90, 0.4);
+  /* Structural surfaces */
+  --forest: #f2efe8;
+  --forest-mid: #eae5da;
+  --forest-light: #e3ddcd;
+  --surface: #f2efe8;
+  --surface-raised: #faf8f3;
+  --surface-overlay: #f5f2ec;
+  --border: #ddd7c9;
+  --border-bright: #c9c1af;
+
+  /* Text */
+  --text-primary: #2a2823;
+  --text-secondary: #6f6a5e;
+  --text-muted: #9b9484;
+  --cream: #f2efe8;
+
+  /* Accent (state, not action) */
+  --accent: #8a6f4c;
+  --accent-soft: rgba(138, 111, 76, 0.14);
+  --accent-soft-strong: rgba(138, 111, 76, 0.3);
+
+  /* Ink (primary committing actions) */
+  --ink: #2a2823;
+
+  /* Retired green/amber palette tokens repointed to the new system so any
+     component still referencing them by name renders correctly. */
+  --canopy: #2a2823;
+  --moss: #8a6f4c;
+  --leaf: #8a6f4c;
+  --sage: #6f6a5e;
+  --bark: #2a2823;
+  --amber: #8a6f4c;
+  --amber-light: #8a6f4c;
+  --parchment: #faf8f3;
+
+  /* Functional danger tone, kept legible against the light surfaces */
+  --danger: #b3433d;
 }
 
 * {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Work Sans', sans-serif;
 }
 
 body {
@@ -38,33 +55,35 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: 'DM Serif Display', serif;
+  font-family: 'Newsreader', serif;
+  font-weight: 500;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--forest); }
-::-webkit-scrollbar-thumb { background: var(--canopy); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
 
 /* Card */
 .card {
   background: var(--surface-raised);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 8px;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .card:hover {
   border-color: var(--border-bright);
   transform: translateY(-1px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 24px rgba(40, 35, 25, 0.12);
 }
 
 /* Buttons */
 .btn-primary {
-  background: var(--canopy);
+  background: var(--ink);
   color: var(--cream);
-  border: 1px solid var(--moss);
+  border: 1px solid var(--ink);
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: 500;
@@ -75,8 +94,8 @@ h1, h2, h3 {
 }
 
 .btn-primary:hover {
-  background: var(--moss);
-  box-shadow: 0 0 20px rgba(90, 143, 90, 0.3);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .btn-secondary {
@@ -99,26 +118,27 @@ h1, h2, h3 {
 
 /* Inputs */
 .input-field {
-  background: var(--forest);
+  background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text-primary);
   border-radius: 8px;
-  padding: 10px 14px;
+  padding: 11px 14px;
   width: 100%;
   transition: all 0.2s;
   outline: none;
 }
 
 .input-field:focus {
-  border-color: var(--moss);
-  box-shadow: 0 0 0 3px rgba(90, 143, 90, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .input-field::placeholder {
   color: var(--text-muted);
 }
 
-/* Status badges */
+/* Status badges — neutral by default; only .badge-red keeps a functional
+   color since it signals an error/cancelled state that needs to stay legible. */
 .badge {
   padding: 3px 10px;
   border-radius: 999px;
@@ -128,20 +148,21 @@ h1, h2, h3 {
   text-transform: uppercase;
 }
 
-.badge-green { background: rgba(90,143,90,0.2); color: var(--leaf); border: 1px solid rgba(90,143,90,0.3); }
-.badge-amber { background: rgba(212,160,23,0.15); color: var(--amber-light); border: 1px solid rgba(212,160,23,0.3); }
-.badge-red { background: rgba(180,60,60,0.2); color: #e88; border: 1px solid rgba(180,60,60,0.3); }
-.badge-blue { background: rgba(60,100,180,0.2); color: #88aaee; border: 1px solid rgba(60,100,180,0.3); }
-.badge-gray { background: rgba(120,120,120,0.2); color: var(--text-secondary); border: 1px solid rgba(120,120,120,0.2); }
+.badge-green { background: var(--surface-overlay); color: var(--text-secondary); border: 1px solid var(--border); }
+.badge-amber { background: var(--surface-overlay); color: var(--text-secondary); border: 1px solid var(--border); }
+.badge-red { background: rgba(179,67,61,0.1); color: var(--danger); border: 1px solid rgba(179,67,61,0.25); }
+.badge-blue { background: var(--surface-overlay); color: var(--text-secondary); border: 1px solid var(--border); }
+.badge-gray { background: var(--surface-overlay); color: var(--text-secondary); border: 1px solid var(--border); }
 
 /* Nav active */
 .nav-active {
-  background: rgba(90, 143, 90, 0.15);
-  color: var(--leaf);
-  border: 1px solid rgba(90, 143, 90, 0.3);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent-soft-strong);
 }
 
-/* Grain texture overlay */
+/* Grain texture overlay — legacy full-page version, kept but no longer used
+   globally (it reads too dark/flat against the light theme). */
 .grain::before {
   content: '';
   position: fixed;
@@ -150,6 +171,19 @@ h1, h2, h3 {
   pointer-events: none;
   z-index: 9999;
   opacity: 0.4;
+}
+
+/* Subtle grain overlay for individual surfaces (header, cards, sidebar).
+   Usage: parent needs `position: relative; overflow: hidden;`, add
+   <div className="grain-surface" /> as its first child, and give real
+   content `position: relative` (or a z-index) to sit above it. */
+.grain-surface {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.045;
+  mix-blend-mode: multiply;
 }
 
 /* Divider */
@@ -191,7 +225,7 @@ select option {
 
 select.input-field {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237a7468' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239b9484' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 36px;
@@ -214,7 +248,7 @@ label {
 
 /* checkbox */
 input[type="checkbox"] {
-  accent-color: var(--moss);
+  accent-color: var(--accent);
   width: 16px;
   height: 16px;
 }

@@ -6,14 +6,17 @@ import {
   claimTeamMember, refreshCurrentTeamMember, TEAM_MEMBER_CHANGED_EVENT,
 } from '../utils/auth';
 
+// Neutral badge treatment for every role — keeps the single accent colour
+// meaningful rather than hue-coding each permission level.
+const NEUTRAL_ROLE_BADGE = { bg: 'var(--surface-overlay)', color: 'var(--text-secondary)', border: 'var(--border)' };
 const ROLE_STYLES: Record<TeamMember['role'], { bg: string; color: string; border: string }> = {
-  admin: { bg: 'rgba(180,60,60,0.15)', color: '#e88', border: 'rgba(180,60,60,0.3)' },
-  supervisor: { bg: 'rgba(212,160,23,0.15)', color: 'var(--amber-light)', border: 'rgba(212,160,23,0.3)' },
-  arborist: { bg: 'rgba(90,143,90,0.15)', color: 'var(--leaf)', border: 'rgba(90,143,90,0.3)' },
-  apprentice: { bg: 'rgba(60,120,200,0.15)', color: '#88aaee', border: 'rgba(60,120,200,0.3)' },
+  admin: NEUTRAL_ROLE_BADGE,
+  supervisor: NEUTRAL_ROLE_BADGE,
+  arborist: NEUTRAL_ROLE_BADGE,
+  apprentice: NEUTRAL_ROLE_BADGE,
 };
 
-const COLOURS = ['#5a8f5a', '#d4a017', '#e88080', '#88aaee', '#bb99ee', '#88ccee', '#f0a060', '#a8c8a8'];
+const COLOURS = ['#5a8f5a', '#d4a017', '#b3433d', '#88aaee', '#bb99ee', '#88ccee', '#f0a060', '#a8c8a8'];
 
 const emptyMember = (): Partial<TeamMember> => ({
   name: '', email: '', phone: '', role: 'arborist', colour: '#5a8f5a', active: true, reports_to: null,
@@ -113,7 +116,7 @@ export const TeamManagement: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="fade-in">
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>Team</h1>
+          <h1 style={{ fontFamily: 'Newsreader, serif', fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>Team</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{members.filter(m => m.active).length} active members</p>
         </div>
         {canAddMember && (
@@ -124,7 +127,7 @@ export const TeamManagement: React.FC = () => {
       </div>
 
       {!myTeamMemberId && !loading && (
-        <div className="card" style={{ padding: '14px 18px', borderColor: 'rgba(212,160,23,0.35)', background: 'rgba(212,160,23,0.06)' }}>
+        <div className="card" style={{ padding: '14px 18px', borderColor: 'rgba(138,111,76,0.35)', background: 'rgba(138,111,76,0.06)' }}>
           <p style={{ fontSize: '13px', color: 'var(--amber-light)' }}>
             Your login isn't linked to a roster entry yet, so team/job/quote permissions won't apply to you correctly. Find your name below and click <strong>"This is me"</strong> — or add yourself if you're not listed.
           </p>
@@ -134,7 +137,7 @@ export const TeamManagement: React.FC = () => {
       {/* Editor */}
       {editing && (
         <div className="card" style={{ padding: '24px' }}>
-          <h2 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '20px', color: 'var(--text-primary)', marginBottom: '20px' }}>
+          <h2 style={{ fontFamily: 'Newsreader, serif', fontSize: '20px', color: 'var(--text-primary)', marginBottom: '20px' }}>
             {isNew ? 'Add Team Member' : 'Edit Team Member'}
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
@@ -184,7 +187,7 @@ export const TeamManagement: React.FC = () => {
             </div>
           </div>
           {error && (
-            <div style={{ marginTop: '12px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(180,60,60,0.1)', border: '1px solid rgba(180,60,60,0.25)', color: '#e88', fontSize: '13px' }}>
+            <div style={{ marginTop: '12px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(180,60,60,0.1)', border: '1px solid rgba(180,60,60,0.25)', color: '#b3433d', fontSize: '13px' }}>
               {error}
             </div>
           )}
@@ -207,7 +210,7 @@ export const TeamManagement: React.FC = () => {
           <div style={{ width: '56px', height: '56px', borderRadius: '14px', background: 'var(--surface-raised)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <User size={24} color="var(--text-muted)" />
           </div>
-          <h3 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '20px', color: 'var(--text-primary)', marginBottom: '8px' }}>No team members yet</h3>
+          <h3 style={{ fontFamily: 'Newsreader, serif', fontSize: '20px', color: 'var(--text-primary)', marginBottom: '8px' }}>No team members yet</h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '20px' }}>Add your first team member to start assigning jobs</p>
           {canAddMember && (
             <button className="btn-primary" onClick={() => { setEditing(emptyMember()); setIsNew(true); }}>
@@ -246,7 +249,7 @@ export const TeamManagement: React.FC = () => {
                     </div>
                     {member.invite_status === 'pending' && member.invite_code && canManage && (
                       <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <button onClick={() => handleCopyInvite(member.id, member.invite_code!)} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.3)', color: 'var(--amber-light)' }}>
+                        <button onClick={() => handleCopyInvite(member.id, member.invite_code!)} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: 'rgba(138,111,76,0.1)', border: '1px solid rgba(138,111,76,0.3)', color: 'var(--amber-light)' }}>
                           {copiedId === member.id ? <CheckCircle2 size={12} /> : <Copy size={12} />}
                           {copiedId === member.id ? 'Link copied!' : 'Copy invite link'}
                         </button>
@@ -255,7 +258,7 @@ export const TeamManagement: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0, flexWrap: 'wrap' }}>
                     {!member.profile_id && !myTeamMemberId && (
-                      <button onClick={() => handleClaim(member.id)} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '6px 10px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: 'rgba(90,143,90,0.12)', border: '1px solid rgba(90,143,90,0.3)', color: 'var(--leaf)' }}>
+                      <button onClick={() => handleClaim(member.id)} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '6px 10px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: 'rgba(138,111,76,0.12)', border: '1px solid rgba(138,111,76,0.3)', color: 'var(--leaf)' }}>
                         <UserCheck size={13} /> This is me
                       </button>
                     )}
@@ -275,7 +278,7 @@ export const TeamManagement: React.FC = () => {
                       </button>
                     )}
                     {isAdmin() && (
-                      <button onClick={() => handleDelete(member.id)} style={{ padding: '7px', borderRadius: '6px', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(180,60,60,0.3)', color: '#e88', display: 'flex', alignItems: 'center' }}>
+                      <button onClick={() => handleDelete(member.id)} style={{ padding: '7px', borderRadius: '6px', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(180,60,60,0.3)', color: '#b3433d', display: 'flex', alignItems: 'center' }}>
                         <Trash2 size={14} />
                       </button>
                     )}

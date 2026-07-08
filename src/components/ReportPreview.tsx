@@ -66,12 +66,12 @@ Generated on: ${new Date().toLocaleDateString()}
 
   const getConditionColor = (condition: string) => {
     switch (condition) {
-      case 'Excellent': return 'text-green-600';
-      case 'Good': return 'text-green-500';
-      case 'Fair': return 'text-yellow-500';
-      case 'Poor': return 'text-orange-500';
-      case 'Critical': return 'text-red-500';
-      default: return 'text-gray-500';
+      case 'Excellent': return 'text-[var(--accent)]';
+      case 'Good': return 'text-[var(--accent)]';
+      case 'Fair': return 'text-[var(--text-secondary)]';
+      case 'Poor': return 'text-[var(--text-secondary)]';
+      case 'Critical': return 'text-[var(--danger)]';
+      default: return 'text-[var(--text-muted)]';
     }
   };
 
@@ -81,7 +81,7 @@ Generated on: ${new Date().toLocaleDateString()}
         <h2 className="text-xl font-semibold">Report Preview</h2>
         <button
           onClick={handleExport}
-          className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          className="flex items-center gap-2 bg-[var(--ink)] text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-[var(--accent)] transition-colors"
         >
           <Download size={20} />
           Export Report
@@ -90,7 +90,7 @@ Generated on: ${new Date().toLocaleDateString()}
 
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Header */}
-        <div className="bg-green-600 text-white p-6">
+        <div className="bg-[var(--ink)] text-[var(--cream)] p-6">
           <h1 className="text-2xl font-bold mb-2">ARBORIST REPORT</h1>
           <h2 className="text-xl">{report.title || 'Untitled Report'}</h2>
         </div>
@@ -99,25 +99,25 @@ Generated on: ${new Date().toLocaleDateString()}
         <div className="p-6 border-b">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center gap-2">
-              <User className="text-gray-500" size={20} />
+              <User className="text-[var(--text-muted)]" size={20} />
               <div>
                 <span className="font-medium">Client:</span> {report.clientName}
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Calendar className="text-gray-500" size={20} />
+              <Calendar className="text-[var(--text-muted)]" size={20} />
               <div>
                 <span className="font-medium">Date:</span> {report.date}
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <MapPin className="text-gray-500" size={20} />
+              <MapPin className="text-[var(--text-muted)]" size={20} />
               <div>
                 <span className="font-medium">Address:</span> {report.address}
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <FileText className="text-gray-500" size={20} />
+              <FileText className="text-[var(--text-muted)]" size={20} />
               <div>
                 <span className="font-medium">Inspector:</span> {report.inspector}
               </div>
@@ -128,7 +128,7 @@ Generated on: ${new Date().toLocaleDateString()}
         {/* Tree Information */}
         <div className="p-6 border-b">
           <div className="flex items-center gap-2 mb-4">
-            <TreePine className="text-green-600" size={24} />
+            <TreePine className="text-[var(--accent)]" size={24} />
             <h3 className="text-lg font-semibold">Tree Information</h3>
           </div>
           
@@ -190,7 +190,7 @@ Generated on: ${new Date().toLocaleDateString()}
         {report.photos.length > 0 && (
           <div className="p-6 border-b">
             <div className="flex items-center gap-2 mb-4">
-              <Camera className="text-green-600" size={24} />
+              <Camera className="text-[var(--accent)]" size={24} />
               <h3 className="text-lg font-semibold">Photo Documentation</h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -199,7 +199,7 @@ Generated on: ${new Date().toLocaleDateString()}
                   <img src={photo.url} alt={photo.caption} className="w-full h-32 object-cover" />
                   <div className="p-2">
                     <p className="text-sm font-medium">{photo.category}</p>
-                    <p className="text-xs text-gray-600">{photo.caption}</p>
+                    <p className="text-xs text-[var(--text-secondary)]">{photo.caption}</p>
                   </div>
                 </div>
               ))}
@@ -213,10 +213,10 @@ Generated on: ${new Date().toLocaleDateString()}
             <h3 className="text-lg font-semibold mb-4">Observations & Notes</h3>
             <div className="space-y-4">
               {report.notes.map(note => (
-                <div key={note.id} className="border-l-4 border-green-500 pl-4">
+                <div key={note.id} className="border-l-4 border-[var(--accent)] pl-4">
                   <h4 className="font-medium">{note.title}</h4>
-                  <p className="text-sm text-gray-600 mb-1">{note.category}</p>
-                  <p className="text-gray-700 whitespace-pre-wrap">{note.content}</p>
+                  <p className="text-sm text-[var(--text-secondary)] mb-1">{note.category}</p>
+                  <p className="text-[var(--text-secondary)] whitespace-pre-wrap">{note.content}</p>
                 </div>
               ))}
             </div>
@@ -224,7 +224,7 @@ Generated on: ${new Date().toLocaleDateString()}
         )}
 
         {/* Footer */}
-        <div className="p-6 bg-gray-50 text-center text-sm text-gray-600">
+        <div className="p-6 bg-[var(--surface-overlay)] text-center text-sm text-[var(--text-secondary)]">
           <p>Report generated on {new Date().toLocaleDateString()}</p>
         </div>
       </div>

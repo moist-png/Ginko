@@ -26,10 +26,10 @@ export const ReportList: React.FC<ReportListProps> = ({
   
   const getStatusColor = (status: ArboristReport['status']) => {
     switch (status) {
-      case 'draft': return 'bg-yellow-100 text-yellow-800';
-      case 'in-progress': return 'bg-blue-100 text-blue-800';
-      case 'completed': return 'bg-[rgba(90,143,90,0.15)] text-green-800';
-      default: return 'bg-[var(--surface-overlay)] text-gray-800';
+      case 'draft': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      case 'in-progress': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      case 'completed': return 'bg-[rgba(138,111,76,0.15)] text-[var(--accent)]';
+      default: return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
     }
   };
 
@@ -71,7 +71,7 @@ export const ReportList: React.FC<ReportListProps> = ({
           placeholder="Search entries..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
       </div>
 
@@ -103,7 +103,7 @@ export const ReportList: React.FC<ReportListProps> = ({
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     {report.treeData.treeNumber && (
-                      <span className="bg-[rgba(90,143,90,0.15)] text-green-800 px-2 py-1 rounded-full text-sm font-medium">
+                      <span className="bg-[rgba(138,111,76,0.15)] text-[var(--accent)] px-2 py-1 rounded-full text-sm font-medium">
                         #{report.treeData.treeNumber}
                       </span>
                     )}

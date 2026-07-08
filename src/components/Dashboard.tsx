@@ -100,14 +100,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     setSyncing(false);
   };
 
-  const JOB_STATUS_COLOUR: Record<string, string> = {
-    scheduled: 'var(--amber)', 'in-progress': '#88aaee', completed: 'var(--leaf)', cancelled: 'var(--text-muted)'
-  };
-
-  const JOB_TYPE_COLOUR: Record<string, string> = {
-    assessment: '#bb99ee', pruning: 'var(--leaf)', removal: '#e88',
-    treatment: '#88aaee', consultation: '#88ccee', emergency: '#f0a060', other: 'var(--text-muted)'
-  };
+  // Status/type badges are intentionally neutral — a deliberate move away from
+  // hue-coding so the single accent colour stays meaningful (see design handoff).
 
   if (loading) {
     return (
@@ -125,7 +119,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
         <div>
-          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>
+          <h1 style={{ fontFamily: 'Newsreader, serif', fontWeight: 500, fontSize: '33px', color: 'var(--text-primary)', letterSpacing: '-0.01em', marginBottom: '6px' }}>
             Dashboard
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
@@ -136,11 +130,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         {/* Online/Offline + Sync indicator */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
-            display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px',
+            display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 14px',
             borderRadius: '999px', fontSize: '12px', fontWeight: '600',
-            background: online ? 'rgba(90,143,90,0.15)' : 'rgba(180,60,60,0.15)',
-            border: `1px solid ${online ? 'rgba(90,143,90,0.3)' : 'rgba(180,60,60,0.3)'}`,
-            color: online ? 'var(--leaf)' : '#e88',
+            background: online ? 'var(--accent-soft)' : 'rgba(179,67,61,0.12)',
+            border: `1px solid ${online ? 'var(--accent-soft-strong)' : 'rgba(179,67,61,0.3)'}`,
+            color: online ? 'var(--accent)' : 'var(--danger)',
           }}>
             {online ? <Wifi size={13} /> : <WifiOff size={13} />}
             {online ? 'Online' : 'Offline'}
@@ -148,9 +142,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
           {pendingSync > 0 && (
             <button onClick={handleSync} disabled={!online || syncing} style={{
-              display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px',
+              display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 14px',
               borderRadius: '999px', fontSize: '12px', fontWeight: '600', cursor: online ? 'pointer' : 'not-allowed',
-              background: 'rgba(212,160,23,0.15)', border: '1px solid rgba(212,160,23,0.3)', color: 'var(--amber-light)',
+              background: 'var(--surface-overlay)', border: '1px solid var(--border)', color: 'var(--text-secondary)',
             }}>
               <RefreshCw size={13} style={{ animation: syncing ? 'spin 1s linear infinite' : 'none' }} />
               {pendingSync} pending sync
@@ -159,19 +153,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Stat Cards */}
+      {/* Stat Cards — accent colour reserved for the primary metric only */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px' }}>
         {[
-          { label: 'Tree Reports', value: stats.totalReports, icon: FileText, colour: '#bb99ee', bg: 'rgba(120,80,180,0.1)', action: 'sites' },
-          { label: 'Pending Quotes', value: stats.pendingQuotes, icon: Clock, colour: '#f0a060', bg: 'rgba(200,100,30,0.1)', action: 'quotes' },
-        ].map(({ label, value, icon: Icon, colour, bg, action }) => (
+          { label: 'Tree Reports', value: stats.totalReports, icon: FileText, primary: true, action: 'sites' },
+          { label: 'Pending Quotes', value: stats.pendingQuotes, icon: Clock, primary: false, action: 'quotes' },
+        ].map(({ label, value, icon: Icon, primary, action }) => (
           <div key={label} onClick={() => onNavigate(action)} className="card" style={{ padding: '20px', cursor: 'pointer' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon size={18} color={colour} />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <div style={{ width: '38px', height: '38px', borderRadius: '9px', background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Icon size={18} color={primary ? 'var(--accent)' : 'var(--text-secondary)'} />
               </div>
             </div>
-            <div style={{ fontSize: '28px', fontWeight: '700', color: colour, lineHeight: 1, marginBottom: '4px' }}>{value}</div>
+            <div style={{ fontSize: '28px', fontWeight: '600', fontFamily: 'Newsreader, serif', color: primary ? 'var(--accent)' : 'var(--text-primary)', lineHeight: 1, marginBottom: '6px' }}>{value}</div>
             <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>{label}</div>
           </div>
         ))}
@@ -179,33 +173,33 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '20px' }}>
         {/* Upcoming Jobs */}
-        <div className="card" style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <h2 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)' }}>Upcoming Jobs</h2>
-            <button onClick={() => onNavigate('jobs')} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: 'var(--leaf)', background: 'none', border: 'none', cursor: 'pointer' }}>
+        <div className="card" style={{ padding: '24px', overflow: 'hidden' }}>
+          <div className="grain-surface" />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <h2 style={{ fontFamily: 'Newsreader, serif', fontWeight: 500, fontSize: '19px', color: 'var(--text-primary)' }}>Upcoming Jobs</h2>
+            <button onClick={() => onNavigate('jobs')} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}>
               View all <ChevronRight size={14} />
             </button>
           </div>
           {stats.upcomingJobs.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--text-muted)', fontSize: '14px' }}>
+            <div style={{ position: 'relative', textAlign: 'center', padding: '24px 0', color: 'var(--text-muted)', fontSize: '14px' }}>
               <Calendar size={24} style={{ margin: '0 auto 8px', opacity: 0.4 }} />
               No upcoming jobs
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {stats.upcomingJobs.map(job => (
                 <div key={job.id} onClick={() => onNavigate('jobs')} style={{
                   display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px',
-                  borderRadius: '8px', background: 'var(--forest)', border: '1px solid var(--border)', cursor: 'pointer'
+                  borderRadius: '8px', background: 'var(--surface)', border: '1px solid var(--border)', cursor: 'pointer'
                 }}>
-                  <div style={{ width: '3px', height: '36px', borderRadius: '2px', background: JOB_TYPE_COLOUR[job.job_type] || 'var(--text-muted)', flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{job.title || 'Untitled Job'}</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{job.client_name} · {new Date(job.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}</div>
                   </div>
                   <span style={{
                     padding: '2px 8px', borderRadius: '999px', fontSize: '10px', fontWeight: '600', flexShrink: 0,
-                    background: 'rgba(212,160,23,0.15)', color: 'var(--amber-light)', textTransform: 'uppercase', letterSpacing: '0.05em'
+                    background: 'var(--surface-overlay)', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em'
                   }}>{job.status}</span>
                 </div>
               ))}
@@ -214,38 +208,39 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         </div>
 
         {/* Recent Sites */}
-        <div className="card" style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <h2 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)' }}>Recent Sites</h2>
-            <button onClick={() => onNavigate('sites')} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: 'var(--leaf)', background: 'none', border: 'none', cursor: 'pointer' }}>
+        <div className="card" style={{ padding: '24px', overflow: 'hidden' }}>
+          <div className="grain-surface" />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <h2 style={{ fontFamily: 'Newsreader, serif', fontWeight: 500, fontSize: '19px', color: 'var(--text-primary)' }}>Recent Sites</h2>
+            <button onClick={() => onNavigate('sites')} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}>
               View all <ChevronRight size={14} />
             </button>
           </div>
           {stats.recentSites.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--text-muted)', fontSize: '14px' }}>
+            <div style={{ position: 'relative', textAlign: 'center', padding: '24px 0', color: 'var(--text-muted)', fontSize: '14px' }}>
               <MapPin size={24} style={{ margin: '0 auto 8px', opacity: 0.4 }} />
               No sites yet
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {stats.recentSites.map(site => (
                 <div key={site.id} onClick={() => onNavigate('sites')} style={{
                   display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px',
-                  borderRadius: '8px', background: 'var(--forest)', border: '1px solid var(--border)', cursor: 'pointer'
+                  borderRadius: '8px', background: 'var(--surface)', border: '1px solid var(--border)', cursor: 'pointer'
                 }}>
                   <div style={{
                     width: '32px', height: '32px', borderRadius: '8px', flexShrink: 0,
-                    background: 'rgba(61,107,61,0.3)', border: '1px solid var(--border-bright)',
+                    background: 'var(--forest-mid)', border: '1px solid var(--border-bright)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                   }}>
-                    <MapPin size={14} color="var(--leaf)" />
+                    <MapPin size={14} color="var(--text-secondary)" />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{site.name || 'Untitled Site'}</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{site.client_name || 'No client'}</div>
                   </div>
                   {site.portal_enabled && (
-                    <span style={{ padding: '2px 8px', borderRadius: '999px', fontSize: '10px', fontWeight: '600', background: 'rgba(90,143,90,0.15)', color: 'var(--leaf)', border: '1px solid rgba(90,143,90,0.3)', flexShrink: 0 }}>Portal</span>
+                    <span style={{ padding: '2px 8px', borderRadius: '999px', fontSize: '10px', fontWeight: '600', background: 'var(--accent-soft)', color: 'var(--accent)', border: '1px solid var(--accent-soft-strong)', flexShrink: 0 }}>Portal</span>
                   )}
                 </div>
               ))}
@@ -255,22 +250,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       </div>
 
       {/* Quick Actions */}
-      <div className="card" style={{ padding: '24px' }}>
-        <h2 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '18px', color: 'var(--text-primary)', marginBottom: '16px' }}>Quick Actions</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
+      <div className="card" style={{ padding: '24px', overflow: 'hidden' }}>
+        <div className="grain-surface" />
+        <h2 style={{ position: 'relative', fontFamily: 'Newsreader, serif', fontWeight: 500, fontSize: '19px', color: 'var(--text-primary)', marginBottom: '16px' }}>Quick Actions</h2>
+        <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
           {[
-            { label: 'New Job', icon: Briefcase, action: 'new-job', colour: 'var(--amber)' },
-            { label: 'New Site', icon: MapPin, action: 'new-site', colour: 'var(--leaf)' },
-            { label: 'New Quote', icon: FileText, action: 'new-quote', colour: '#bb99ee' },
-            { label: 'Risk Assessment', icon: AlertTriangle, action: 'new-risk', colour: '#f0a060' },
-            { label: 'Team', icon: Users, action: 'team', colour: '#88aaee' },
-          ].map(({ label, icon: Icon, action, colour }) => (
+            { label: 'New Job', icon: Briefcase, action: 'new-job' },
+            { label: 'New Site', icon: MapPin, action: 'new-site' },
+            { label: 'New Quote', icon: FileText, action: 'new-quote' },
+            { label: 'Risk Assessment', icon: AlertTriangle, action: 'new-risk' },
+            { label: 'Team', icon: Users, action: 'team' },
+          ].map(({ label, icon: Icon, action }) => (
             <button key={action} onClick={() => onNavigate(action)} style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
-              padding: '16px 12px', borderRadius: '10px', cursor: 'pointer', transition: 'all 0.15s',
-              background: 'var(--forest)', border: '1px solid var(--border)', color: 'var(--text-secondary)',
+              padding: '16px 10px', borderRadius: '9px', cursor: 'pointer', transition: 'all 0.15s',
+              background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-secondary)',
             }}>
-              <Icon size={20} color={colour} />
+              <Icon size={20} color="var(--accent)" />
               <span style={{ fontSize: '12px', fontWeight: '500' }}>{label}</span>
             </button>
           ))}

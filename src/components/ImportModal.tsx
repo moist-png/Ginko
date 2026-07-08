@@ -209,7 +209,7 @@ Add more trees following the same format...`;
         <div className="flex items-center justify-between p-6 border-b">
           <div>
             <h2 className="text-xl font-semibold">Import Trees to {siteName}</h2>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-[var(--text-secondary)] mt-1">
               Upload a PDF, Word document, or text file containing tree data
             </p>
           </div>
@@ -218,7 +218,7 @@ Add more trees following the same format...`;
               onClose();
               resetModal();
             }}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-1 hover:bg-[var(--surface-overlay)] rounded-full transition-colors"
           >
             <X size={20} />
           </button>
@@ -231,19 +231,19 @@ Add more trees following the same format...`;
               <div
                 className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                   dragActive
-                    ? 'border-green-500 bg-green-50'
-                    : 'border-gray-300 hover:border-gray-400'
+                    ? 'border-[var(--accent)] bg-[var(--accent-soft)]'
+                    : 'border-[var(--border)] hover:border-[var(--border-bright)]'
                 }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
               >
-                <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <Upload className="mx-auto h-12 w-12 text-[var(--text-muted)] mb-4" />
+                <h3 className="text-lg font-medium text-[var(--text-primary)] mb-2">
                   {isProcessing ? 'Processing document...' : 'Upload tree data document'}
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-[var(--text-secondary)] mb-4">
                   Drag and drop your file here, or click to browse
                 </p>
                 <input
@@ -256,27 +256,27 @@ Add more trees following the same format...`;
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isProcessing}
-                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                  className="bg-[var(--ink)] text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-[var(--accent)] transition-colors disabled:opacity-50"
                 >
                   {isProcessing ? 'Processing...' : 'Choose File'}
                 </button>
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-[var(--text-muted)] mt-2">
                   Supports PDF, Word documents (.doc, .docx), and text files
                 </p>
               </div>
 
               {/* Template Download */}
-              <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="bg-[var(--surface-overlay)] p-4 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <FileText className="text-blue-600 mt-1" size={20} />
+                  <FileText className="text-[var(--text-secondary)] mt-1" size={20} />
                   <div className="flex-1">
-                    <h4 className="font-medium text-blue-900">Need a template?</h4>
-                    <p className="text-sm text-blue-700 mb-3">
+                    <h4 className="font-medium text-[var(--text-primary)]">Need a template?</h4>
+                    <p className="text-sm text-[var(--text-secondary)] mb-3">
                       Download our template to see the expected format for tree data import.
                     </p>
                     <button
                       onClick={downloadTemplate}
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      className="flex items-center gap-2 text-[var(--text-secondary)] hover:opacity-80 text-sm font-medium"
                     >
                       <Download size={16} />
                       Download Template
@@ -286,9 +286,9 @@ Add more trees following the same format...`;
               </div>
 
               {/* Supported Formats */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-medium text-gray-900 mb-2">Supported Data Formats</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
+              <div className="bg-[var(--surface-overlay)] p-4 rounded-lg">
+                <h4 className="font-medium text-[var(--text-primary)] mb-2">Supported Data Formats</h4>
+                <ul className="text-sm text-[var(--text-secondary)] space-y-1">
                   <li>• Structured text with field names (Tree Number, Species, DBH, etc.)</li>
                   <li>• Tables in PDF or Word documents</li>
                   <li>• CSV-like data separated by commas or tabs</li>
@@ -297,12 +297,12 @@ Add more trees following the same format...`;
               </div>
 
               {error && (
-                <div className="bg-red-50 p-4 rounded-lg">
+                <div className="bg-[rgba(179,67,61,0.08)] p-4 rounded-lg">
                   <div className="flex items-start gap-3">
-                    <AlertCircle className="text-red-600 mt-1" size={20} />
+                    <AlertCircle className="text-[var(--danger)] mt-1" size={20} />
                     <div>
-                      <h4 className="font-medium text-red-900">Import Error</h4>
-                      <p className="text-sm text-red-700">{error}</p>
+                      <h4 className="font-medium text-[var(--text-primary)]">Import Error</h4>
+                      <p className="text-sm text-[var(--danger)]">{error}</p>
                     </div>
                   </div>
                 </div>
@@ -311,14 +311,14 @@ Add more trees following the same format...`;
           ) : (
             <div className="space-y-4">
               {/* Import Summary */}
-              <div className="bg-green-50 p-4 rounded-lg">
+              <div className="bg-[var(--accent-soft)] p-4 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="text-green-600 mt-1" size={20} />
+                  <CheckCircle className="text-[var(--accent)] mt-1" size={20} />
                   <div>
-                    <h4 className="font-medium text-green-900">
+                    <h4 className="font-medium text-[var(--text-primary)]">
                       Found {importedData.length} trees in document
                     </h4>
-                    <p className="text-sm text-green-700">
+                    <p className="text-sm text-[var(--accent)]">
                       Review the data below and select which trees to import.
                     </p>
                   </div>
@@ -330,19 +330,19 @@ Add more trees following the same format...`;
                 <div className="flex gap-2">
                   <button
                     onClick={selectAll}
-                    className="text-sm text-green-600 hover:text-green-800"
+                    className="text-sm text-[var(--accent)] hover:opacity-80"
                   >
                     Select All
                   </button>
-                  <span className="text-gray-300">|</span>
+                  <span className="text-[var(--border-bright)]">|</span>
                   <button
                     onClick={selectNone}
-                    className="text-sm text-gray-600 hover:text-gray-800"
+                    className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   >
                     Select None
                   </button>
                 </div>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-[var(--text-secondary)]">
                   {selectedTrees.size} of {importedData.length} selected
                 </span>
               </div>
@@ -354,8 +354,8 @@ Add more trees following the same format...`;
                     key={index}
                     className={`border rounded-lg p-4 cursor-pointer transition-colors ${
                       selectedTrees.has(index)
-                        ? 'border-green-500 bg-green-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-[var(--accent)] bg-[var(--accent-soft)]'
+                        : 'border-[var(--border)] hover:border-[var(--border)]'
                     }`}
                     onClick={() => toggleTreeSelection(index)}
                   >
@@ -369,7 +369,7 @@ Add more trees following the same format...`;
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           {tree.treeNumber && (
-                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                            <span className="bg-[var(--surface-overlay)] text-[var(--accent)] px-2 py-1 rounded text-xs font-medium">
                               #{tree.treeNumber}
                             </span>
                           )}
@@ -377,10 +377,10 @@ Add more trees following the same format...`;
                             {tree.species || 'Unknown Species'}
                           </h4>
                           {tree.commonName && (
-                            <span className="text-gray-600">({tree.commonName})</span>
+                            <span className="text-[var(--text-secondary)]">({tree.commonName})</span>
                           )}
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-gray-600">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-[var(--text-secondary)]">
                           {tree.dbh && <div>DBH: {tree.dbh}cm</div>}
                           {tree.height && <div>Height: {tree.height}m</div>}
                           {tree.treeHealth && <div>Health: {tree.treeHealth}</div>}
@@ -404,14 +404,14 @@ Add more trees following the same format...`;
                   onClose();
                   resetModal();
                 }}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-[var(--border)] rounded-lg hover:bg-[var(--surface-overlay)] transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleImport}
                 disabled={selectedTrees.size === 0}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-[var(--ink)] text-[var(--cream)] rounded-lg hover:bg-[var(--accent)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Import {selectedTrees.size} Trees
               </button>

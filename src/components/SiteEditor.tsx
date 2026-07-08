@@ -74,7 +74,7 @@ export const SiteEditor: React.FC<SiteEditorProps> = ({
             {!isNew && onDelete && (
               <button
                 onClick={handleDelete}
-                className="flex items-center gap-2 bg-red-600 text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                className="flex items-center gap-2 bg-[var(--danger)] text-[var(--cream)] px-4 py-2 rounded-lg hover:opacity-90 transition-colors"
               >
                 <Trash2 size={20} />
                 Delete Site
@@ -90,7 +90,7 @@ export const SiteEditor: React.FC<SiteEditorProps> = ({
             </button>
           </div>
         </div>
-        {saveError && <p className="text-sm text-[#e88] mt-2">{saveError}</p>}
+        {saveError && <p className="text-sm text-[#b3433d] mt-2">{saveError}</p>}
       </div>
 
       <div className="flex-1 overflow-auto p-6">
@@ -107,7 +107,7 @@ export const SiteEditor: React.FC<SiteEditorProps> = ({
                   type="text"
                   value={editingSite.name}
                   onChange={(e) => updateSite('name', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="e.g., Greenwood Elementary School, Central Park East"
                 />
               </div>
@@ -119,7 +119,7 @@ export const SiteEditor: React.FC<SiteEditorProps> = ({
                 <textarea
                   value={editingSite.description}
                   onChange={(e) => updateSite('description', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={3}
                   placeholder="Brief description of the site and assessment purpose"
                 />
@@ -133,7 +133,7 @@ export const SiteEditor: React.FC<SiteEditorProps> = ({
                   type="text"
                   value={editingSite.address}
                   onChange={(e) => updateSite('address', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="Full address of the site"
                 />
               </div>
@@ -147,7 +147,7 @@ export const SiteEditor: React.FC<SiteEditorProps> = ({
                     type="text"
                     value={editingSite.clientName}
                     onChange={(e) => updateSite('clientName', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="Client or organization name"
                   />
                 </div>
@@ -160,7 +160,7 @@ export const SiteEditor: React.FC<SiteEditorProps> = ({
                     type="tel"
                     value={editingSite.clientPhone}
                     onChange={(e) => updateSite('clientPhone', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="Client phone number"
                   />
                 </div>
@@ -174,7 +174,7 @@ export const SiteEditor: React.FC<SiteEditorProps> = ({
                   type="email"
                   value={editingSite.clientEmail}
                   onChange={(e) => updateSite('clientEmail', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="Client email address"
                 />
               </div>
@@ -186,7 +186,7 @@ export const SiteEditor: React.FC<SiteEditorProps> = ({
                 <textarea
                   value={editingSite.description}
                   onChange={(e) => updateSite('description', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={3}
                   placeholder="Additional information about the site"
                 />

@@ -63,7 +63,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({ onOpenJob, o
       <button onClick={() => setOpen(o => !o)} style={{ position: 'relative', padding: '7px', borderRadius: '8px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center' }} title="Notifications">
         <Bell size={15} />
         {unreadCount > 0 && (
-          <span style={{ position: 'absolute', top: '-4px', right: '-4px', background: '#c84040', color: 'white', borderRadius: '999px', fontSize: '10px', fontWeight: 700, minWidth: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>
+          <span style={{ position: 'absolute', top: '-4px', right: '-4px', background: '#b3433d', color: 'white', borderRadius: '999px', fontSize: '10px', fontWeight: 700, minWidth: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -85,7 +85,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({ onOpenJob, o
             items.map(n => {
               const Icon = ICONS[n.type] || Info;
               return (
-                <button key={n.id} onClick={() => handleClick(n)} style={{ display: 'flex', gap: '10px', width: '100%', padding: '11px 14px', background: n.read ? 'transparent' : 'rgba(90,143,90,0.08)', border: 'none', borderBottom: '1px solid var(--border)', cursor: 'pointer', textAlign: 'left' }}>
+                <button key={n.id} onClick={() => handleClick(n)} style={{ display: 'flex', gap: '10px', width: '100%', padding: '11px 14px', background: n.read ? 'transparent' : 'rgba(138,111,76,0.08)', border: 'none', borderBottom: '1px solid var(--border)', cursor: 'pointer', textAlign: 'left' }}>
                   <div style={{ width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0, background: 'var(--surface-raised)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={13} color="var(--leaf)" />
                   </div>

@@ -161,7 +161,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="flex items-center gap-2 bg-red-600 text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                  className="flex items-center gap-2 bg-[var(--danger)] text-[var(--cream)] px-4 py-2 rounded-lg hover:opacity-90 transition-colors"
                 >
                   <Trash2 size={20} />
                   Delete
@@ -178,7 +178,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
             </button>
           </div>
         </div>
-        {saveError && <p className="text-sm text-[#e88] mt-2">{saveError}</p>}
+        {saveError && <p className="text-sm text-[#b3433d] mt-2">{saveError}</p>}
       </div>
 
       <div className="flex-1 overflow-auto p-6">
@@ -195,7 +195,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                   type="text"
                   value={editingJob.title}
                   onChange={(e) => updateJob('title', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="e.g., Tree Assessment - Oak Removal, Pruning - Maple Trees"
                 />
               </div>
@@ -207,7 +207,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                 <select
                   value={editingJob.siteId || ''}
                   onChange={(e) => updateJob('siteId', e.target.value || undefined)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 >
                   <option value="">None - Standalone Job</option>
                   {sites.map(site => (
@@ -229,7 +229,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                     type="text"
                     value={editingJob.clientName}
                     onChange={(e) => updateJob('clientName', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="Client or organization name"
                   />
                 </div>
@@ -242,7 +242,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                     type="date"
                     value={editingJob.date}
                     onChange={(e) => updateJob('date', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   />
                 </div>
               </div>
@@ -255,7 +255,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                   type="text"
                   value={editingJob.location}
                   onChange={(e) => updateJob('location', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="Job site address or location"
                 />
               </div>
@@ -304,7 +304,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                 <select
                   value={editingJob.status}
                   onChange={(e) => updateJob('status', e.target.value as Job['status'])}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 >
                   {JOB_STATUS_OPTIONS.filter(opt => opt.value !== 'cancelled' || canCancel).map(opt => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -330,7 +330,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                     type="time"
                     value={editingJob.startTime}
                     onChange={(e) => updateJob('startTime', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   />
                 </div>
 
@@ -342,7 +342,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                     type="time"
                     value={editingJob.endTime}
                     onChange={(e) => updateJob('endTime', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   />
                 </div>
               </div>
@@ -355,7 +355,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                   type="time"
                   value={formatTimeInput(editingJob.timeSpent)}
                   onChange={(e) => updateJob('timeSpent', parseTimeInput(e.target.value))}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 />
                 <p className="text-xs text-[var(--text-muted)] mt-1">
                   Auto-calculated from start/end times, or enter manually
@@ -375,7 +375,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                 <textarea
                   value={editingJob.workCompleted}
                   onChange={(e) => updateJob('workCompleted', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={4}
                   placeholder="Describe the work that has been completed..."
                 />
@@ -388,7 +388,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                 <textarea
                   value={editingJob.workToComplete}
                   onChange={(e) => updateJob('workToComplete', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={4}
                   placeholder="Describe any remaining work or follow-up tasks..."
                 />
@@ -401,7 +401,7 @@ export const JobEditor: React.FC<JobEditorProps> = ({
                 <textarea
                   value={editingJob.notes}
                   onChange={(e) => updateJob('notes', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                   rows={4}
                   placeholder="Additional notes, observations, or important details..."
                 />

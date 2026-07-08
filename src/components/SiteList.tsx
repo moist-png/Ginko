@@ -30,7 +30,7 @@ export const SiteList: React.FC<SiteListProps> = ({ sites, onSelectSite, onCreat
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>
+          <h1 style={{ fontFamily: 'Newsreader, serif', fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>
             Site Registry
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
@@ -71,7 +71,7 @@ export const SiteList: React.FC<SiteListProps> = ({ sites, onSelectSite, onCreat
             }}>
               <Building2 size={24} color="var(--text-muted)" />
             </div>
-            <h3 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '20px', color: 'var(--text-primary)', marginBottom: '8px' }}>
+            <h3 style={{ fontFamily: 'Newsreader, serif', fontSize: '20px', color: 'var(--text-primary)', marginBottom: '8px' }}>
               {searchQuery ? 'No results found' : 'No sites yet'}
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '20px' }}>
@@ -93,7 +93,7 @@ export const SiteList: React.FC<SiteListProps> = ({ sites, onSelectSite, onCreat
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
                       <div style={{
                         width: '32px', height: '32px', borderRadius: '8px', flexShrink: 0,
-                        background: 'rgba(61,107,61,0.3)', border: '1px solid var(--border-bright)',
+                        background: 'rgba(138,111,76,0.3)', border: '1px solid var(--border-bright)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center'
                       }}>
                         <Building2 size={16} color="var(--leaf)" />

@@ -48,7 +48,7 @@ export const InviteJoin: React.FC<InviteJoinProps> = ({ code }) => {
           <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'linear-gradient(135deg, var(--canopy), var(--forest-light))', border: '1px solid var(--border-bright)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <TreePine size={32} color="var(--leaf)" />
           </div>
-          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '26px', color: 'var(--text-primary)' }}>You're invited to Ginkgo</h1>
+          <h1 style={{ fontFamily: 'Newsreader, serif', fontSize: '26px', color: 'var(--text-primary)' }}>You're invited to Ginkgo</h1>
         </div>
         <div style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: '16px', padding: '32px' }}>
           {children}
@@ -61,7 +61,7 @@ export const InviteJoin: React.FC<InviteJoinProps> = ({ code }) => {
 
   if (!invite) return (
     <Shell>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e88' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#b3433d' }}>
         <AlertCircle size={18} />
         <p style={{ fontSize: '14px' }}>This invite link isn't valid — it may have already been used. Ask your admin to send you a new one.</p>
       </div>
@@ -105,7 +105,7 @@ export const InviteJoin: React.FC<InviteJoinProps> = ({ code }) => {
           </div>
         </div>
         {error && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(180,60,60,0.1)', border: '1px solid rgba(180,60,60,0.25)', color: '#e88', fontSize: '13px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(180,60,60,0.1)', border: '1px solid rgba(180,60,60,0.25)', color: '#b3433d', fontSize: '13px' }}>
             <AlertCircle size={14} />{error}
           </div>
         )}

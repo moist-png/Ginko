@@ -186,7 +186,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="flex items-center gap-2 bg-red-600 text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                  className="flex items-center gap-2 bg-[var(--danger)] text-[var(--cream)] px-4 py-2 rounded-lg hover:opacity-90 transition-colors"
                 >
                   <Trash2 size={20} />
                   Delete
@@ -203,7 +203,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
             </button>
           </div>
         </div>
-        {saveError && <p className="text-sm text-[#e88] mt-2">{saveError}</p>}
+        {saveError && <p className="text-sm text-[#b3433d] mt-2">{saveError}</p>}
       </div>
 
       <div className="flex-1 overflow-auto p-6">
@@ -221,7 +221,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                   type="text"
                   value={editingRisk.siteAddress}
                   onChange={(e) => updateRisk('siteAddress', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="Enter site address"
                 />
               </div>
@@ -235,7 +235,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                     type="date"
                     value={editingRisk.date}
                     onChange={(e) => updateRisk('date', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   />
                 </div>
 
@@ -247,7 +247,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                     type="text"
                     value={editingRisk.clientName}
                     onChange={(e) => updateRisk('clientName', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="Client name"
                   />
                 </div>
@@ -262,7 +262,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                     type="tel"
                     value={editingRisk.clientMobile}
                     onChange={(e) => updateRisk('clientMobile', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="Mobile number"
                   />
                 </div>
@@ -275,7 +275,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                     type="text"
                     value={editingRisk.firstAidLocation}
                     onChange={(e) => updateRisk('firstAidLocation', e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="First aid kit location"
                   />
                 </div>
@@ -289,7 +289,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                   type="text"
                   value={editingRisk.nearestHospital}
                   onChange={(e) => updateRisk('nearestHospital', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   placeholder="Nearest hospital or emergency room"
                 />
               </div>
@@ -307,7 +307,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                     type="checkbox"
                     checked={editingRisk.hazards[key as keyof typeof editingRisk.hazards]}
                     onChange={(e) => updateHazard(key as keyof typeof editingRisk.hazards, e.target.checked)}
-                    className="w-4 h-4 text-[var(--leaf)] border-[var(--border)] rounded focus:ring-green-500"
+                    className="w-4 h-4 text-[var(--leaf)] border-[var(--border)] rounded focus:ring-[var(--accent)]"
                   />
                   <span className="text-sm text-[var(--text-primary)]">{label}</span>
                 </label>
@@ -346,7 +346,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                       <h3 className="font-medium text-[var(--text-primary)]">Hazard {index + 1}</h3>
                       <button
                         onClick={() => removeHazardControl(control.id)}
-                        className="text-red-600 hover:text-red-800 transition-colors"
+                        className="text-[var(--danger)] hover:opacity-80 transition-colors"
                       >
                         <Trash2 size={16} />
                       </button>
@@ -359,7 +359,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                         <textarea
                           value={control.hazardIdentified}
                           onChange={(e) => updateHazardControl(control.id, 'hazardIdentified', e.target.value)}
-                          className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                          className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                           rows={3}
                           placeholder="Describe the hazard..."
                         />
@@ -371,7 +371,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                         <textarea
                           value={control.controlMeasures}
                           onChange={(e) => updateHazardControl(control.id, 'controlMeasures', e.target.value)}
-                          className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                          className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                           rows={3}
                           placeholder="Describe control measures..."
                         />
@@ -389,7 +389,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
               <h2 className="text-xl font-semibold">Signatures</h2>
               <button
                 onClick={() => setShowSignatureModal(true)}
-                className="flex items-center gap-2 border border-green-600 text-[var(--leaf)] px-4 py-2 rounded-lg hover:bg-green-50 transition-colors"
+                className="flex items-center gap-2 border border-[var(--accent)] text-[var(--leaf)] px-4 py-2 rounded-lg hover:bg-[var(--accent-soft)] transition-colors"
               >
                 <PenTool size={20} />
                 Add Custom Signature
@@ -419,7 +419,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                   )}
                   <button
                     onClick={() => setShowSignatureModal(true)}
-                    className="border border-green-600 text-[var(--leaf)] px-4 py-2 rounded-lg hover:bg-green-50 transition-colors"
+                    className="border border-[var(--accent)] text-[var(--leaf)] px-4 py-2 rounded-lg hover:bg-[var(--accent-soft)] transition-colors"
                   >
                     Add Custom Signature
                   </button>
@@ -433,7 +433,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                       <h3 className="font-medium text-[var(--text-primary)]">{signature.name}</h3>
                       <button
                         onClick={() => removeSignature(signature.id)}
-                        className="text-red-600 hover:text-red-800 transition-colors"
+                        className="text-[var(--danger)] hover:opacity-80 transition-colors"
                       >
                         <Trash2 size={16} />
                       </button>
@@ -475,7 +475,7 @@ export const DailyRiskEditor: React.FC<DailyRiskEditorProps> = ({
                   value={newSignatureName}
                  placeholder={`Enter name or leave blank to use "${getUserDisplayName()}"`}
                   onChange={(e) => setNewSignatureName(e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   onKeyPress={(e) => e.key === 'Enter' && addSignature()}
                 />
               </div>

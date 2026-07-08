@@ -35,8 +35,8 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center gap-3">
             {isDestructive && (
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                <AlertTriangle className="text-red-600" size={20} />
+              <div className="w-10 h-10 bg-[var(--surface-overlay)] rounded-full flex items-center justify-center">
+                <AlertTriangle className="text-[var(--danger)]" size={20} />
               </div>
             )}
             <h3 className="text-lg font-semibold text-[var(--text-primary)]">{title}</h3>
@@ -63,8 +63,8 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               onClick={handleConfirm}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 isDestructive
-                  ? 'bg-red-600 text-[var(--cream)] hover:bg-red-700'
-                  : 'bg-blue-600 text-[var(--cream)] hover:bg-blue-700'
+                  ? 'bg-[var(--danger)] text-[var(--cream)] hover:opacity-90'
+                  : 'bg-[var(--ink)] text-[var(--cream)] hover:bg-[var(--accent)]'
               }`}
             >
               {confirmButtonText}

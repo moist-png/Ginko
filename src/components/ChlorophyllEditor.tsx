@@ -104,9 +104,9 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
 
   const getChlorophyllColor = (level: number) => {
     if (level >= 40) return 'text-[var(--leaf)]';
-    if (level >= 30) return 'text-yellow-600';
-    if (level >= 20) return 'text-orange-600';
-    return 'text-red-600';
+    if (level >= 30) return 'text-[var(--text-secondary)]';
+    if (level >= 20) return 'text-[var(--text-secondary)]';
+    return 'text-[var(--danger)]';
   };
 
   const getChlorophyllStatus = (level: number) => {
@@ -147,7 +147,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
             {!isNew && onDelete && (
               <button
                 onClick={handleDelete}
-                className="flex items-center gap-2 bg-red-600 text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                className="flex items-center gap-2 bg-[var(--danger)] text-[var(--cream)] px-4 py-2 rounded-lg hover:opacity-90 transition-colors"
               >
                 <Trash2 size={20} />
                 Delete
@@ -163,7 +163,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
             </button>
           </div>
         </div>
-        {saveError && <p className="text-sm text-[#e88] mt-2">{saveError}</p>}
+        {saveError && <p className="text-sm text-[#b3433d] mt-2">{saveError}</p>}
       </div>
 
       <div className="flex-1 overflow-auto p-6">
@@ -195,7 +195,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                            // Delay hiding dropdown to allow for clicks
                            setTimeout(() => setShowDropdown(false), 200);
                          }}
-                         className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                         className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                          placeholder="Search by species or location, or leave blank for new tree"
                        />
                      </div>
@@ -209,7 +209,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                                setSearchQuery('');
                                setShowDropdown(false);
                              }}
-                             className="w-full text-left px-4 py-3 hover:bg-green-50 border-b border-[var(--border)] font-medium text-[var(--leaf)]"
+                             className="w-full text-left px-4 py-3 hover:bg-[var(--accent-soft)] border-b border-[var(--border)] font-medium text-[var(--leaf)]"
                            >
                              + Create new tree record
                            </button>
@@ -243,7 +243,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                                setSearchQuery('');
                                setShowDropdown(false);
                              }}
-                             className="w-full text-left px-4 py-3 hover:bg-green-50 border-t border-[var(--border)] font-medium text-[var(--leaf)]"
+                             className="w-full text-left px-4 py-3 hover:bg-[var(--accent-soft)] border-t border-[var(--border)] font-medium text-[var(--leaf)]"
                            >
                              + Create new tree record instead
                            </button>
@@ -266,7 +266,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                       type="text"
                       value={editingReading.treeSpecies}
                       onChange={(e) => updateReading('treeSpecies', e.target.value)}
-                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                       placeholder="e.g., Quercus alba, Acer saccharum"
                     />
                   </div>
@@ -279,7 +279,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                       type="text"
                       value={editingReading.treeLocation}
                       onChange={(e) => updateReading('treeLocation', e.target.value)}
-                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                       placeholder="e.g., Playground area, Grid reference A3"
                     />
                   </div>
@@ -292,7 +292,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                       <select
                         value={editingReading.treeMaturity}
                         onChange={(e) => updateReading('treeMaturity', e.target.value)}
-                        className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                       >
                         <option value="Juvenile">Juvenile</option>
                         <option value="Semi mature">Semi mature</option>
@@ -309,7 +309,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                         type="date"
                         value={editingReading.date}
                         onChange={(e) => updateReading('date', e.target.value)}
-                        className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -322,7 +322,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                       type="number"
                       value={editingReading.chlorophyllLevel}
                       onChange={(e) => updateReading('chlorophyllLevel', parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                       placeholder="0.0"
                       step="0.1"
                       min="0"
@@ -346,7 +346,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                       type="number"
                       value={editingReading.extensionGrowth}
                       onChange={(e) => updateReading('extensionGrowth', parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                       placeholder="0"
                       step="1"
                       min="0"
@@ -360,7 +360,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                     <textarea
                       value={editingReading.notes || ''}
                       onChange={(e) => updateReading('notes', e.target.value)}
-                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                      className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                       rows={4}
                       placeholder="Additional observations, weather conditions, etc."
                     />

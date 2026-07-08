@@ -402,7 +402,7 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
             disabled={readOnly}
             className={`text-left rounded-xl border p-4 transition-colors ${
               distanceMode === 'known'
-                ? 'border-[var(--border-bright)] bg-[rgba(90,143,90,0.12)]'
+                ? 'border-[var(--border-bright)] bg-[rgba(138,111,76,0.12)]'
                 : 'border-[var(--border)] hover:border-[var(--border-bright)]'
             }`}
           >
@@ -414,7 +414,7 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
             disabled={readOnly}
             className={`text-left rounded-xl border p-4 transition-colors ${
               distanceMode === 'gps'
-                ? 'border-[var(--border-bright)] bg-[rgba(90,143,90,0.12)]'
+                ? 'border-[var(--border-bright)] bg-[rgba(138,111,76,0.12)]'
                 : 'border-[var(--border)] hover:border-[var(--border-bright)]'
             }`}
           >
@@ -427,9 +427,9 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
           <>
             <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 mb-5">
               <ol className="space-y-3 text-sm text-[var(--text-secondary)]">
-                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">1</span> Measure your distance from the trunk (e.g. with a tape or by pacing) and type it in below.</li>
-                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">2</span> Hold the phone upright. Aim the cross-hair at the base of the trunk and capture.</li>
-                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">3</span> Tilt up, aim the cross-hair at the treetop and capture. The height appears automatically.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(138,111,76,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">1</span> Measure your distance from the trunk (e.g. with a tape or by pacing) and type it in below.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(138,111,76,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">2</span> Hold the phone upright. Aim the cross-hair at the base of the trunk and capture.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(138,111,76,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">3</span> Tilt up, aim the cross-hair at the treetop and capture. The height appears automatically.</li>
               </ol>
             </div>
 
@@ -441,7 +441,7 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
               value={distance || ''}
               disabled={readOnly}
               onChange={(e) => setDistance(parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-3 text-lg border border-[var(--border)] rounded-lg bg-[var(--forest)] text-[var(--text-primary)] focus:ring-2 focus:ring-green-500 focus:border-transparent mb-5"
+              className="w-full px-3 py-3 text-lg border border-[var(--border)] rounded-lg bg-[var(--forest)] text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent mb-5"
               placeholder="e.g. 10"
             />
 
@@ -458,20 +458,20 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
           <>
             <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-5 mb-5">
               <ol className="space-y-3 text-sm text-[var(--text-secondary)]">
-                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">1</span> Stand about 1m from the trunk. Aim the cross-hair at the base and capture.</li>
-                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">2</span> Walk to wherever you can see the whole tree.</li>
-                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(90,143,90,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">3</span> Aim the cross-hair at the treetop and capture.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(138,111,76,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">1</span> Stand about 1m from the trunk. Aim the cross-hair at the base and capture.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(138,111,76,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">2</span> Walk to wherever you can see the whole tree.</li>
+                <li className="flex gap-3"><span className="shrink-0 w-6 h-6 rounded-full bg-[rgba(138,111,76,0.2)] text-[var(--leaf)] flex items-center justify-center font-semibold">3</span> Aim the cross-hair at the treetop and capture.</li>
               </ol>
             </div>
 
-            <div className="flex items-start gap-2 rounded-lg border border-[rgba(212,160,23,0.3)] bg-[rgba(212,160,23,0.12)] p-3 mb-3">
+            <div className="flex items-start gap-2 rounded-lg border border-[rgba(138,111,76,0.3)] bg-[rgba(138,111,76,0.12)] p-3 mb-3">
               <AlertTriangle size={16} className="text-[var(--amber-light)] mt-0.5 shrink-0" />
               <p className="text-xs text-[var(--text-secondary)]">
                 <strong>You do not need to walk backwards or keep the tree in frame while moving.</strong>
               </p>
             </div>
 
-            <div className="flex items-start gap-2 rounded-lg border border-[rgba(212,160,23,0.3)] bg-[rgba(212,160,23,0.12)] p-3 mb-5">
+            <div className="flex items-start gap-2 rounded-lg border border-[rgba(138,111,76,0.3)] bg-[rgba(138,111,76,0.12)] p-3 mb-5">
               <AlertTriangle size={16} className="text-[var(--amber-light)] mt-0.5 shrink-0" />
               <p className="text-xs text-[var(--text-secondary)]">
                 This uses your phone's location (plus your step count in the background, as a cross-check) to measure the distance, which is a rough estimate — usually accurate to a few metres. Good for spots you can't measure directly; for the most accurate result, use "I know my distance to the trunk" with a tape or paced-out measurement instead. You'll be asked to allow Location access, and Motion access if your device supports it.
@@ -618,7 +618,7 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
       {/* Top instruction banner */}
       <div className="absolute top-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0))' }}>
         <div className="flex items-start gap-2 text-white max-w-2xl mx-auto">
-          <div className="shrink-0 mt-0.5 w-8 h-8 rounded-full bg-[rgba(90,143,90,0.35)] border border-[var(--leaf)] flex items-center justify-center">
+          <div className="shrink-0 mt-0.5 w-8 h-8 rounded-full bg-[rgba(138,111,76,0.35)] border border-[var(--leaf)] flex items-center justify-center">
             <BannerIcon size={18} className="text-[var(--leaf)]" />
           </div>
           <div>
@@ -640,10 +640,10 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
 
       {/* Progress chips */}
       <div className="absolute left-0 right-0 flex justify-center gap-2" style={{ bottom: 108 }}>
-        <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ background: baseAngle !== null ? 'rgba(90,143,90,0.85)' : 'rgba(0,0,0,0.5)', color: '#fff' }}>
+        <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ background: baseAngle !== null ? 'rgba(138,111,76,0.85)' : 'rgba(0,0,0,0.5)', color: '#fff' }}>
           Base {baseAngle !== null ? `✓ ${baseAngle.toFixed(1)}°` : ''}
         </span>
-        <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ background: topAngle !== null ? 'rgba(90,143,90,0.85)' : 'rgba(0,0,0,0.5)', color: '#fff' }}>
+        <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ background: topAngle !== null ? 'rgba(138,111,76,0.85)' : 'rgba(0,0,0,0.5)', color: '#fff' }}>
           Top {topAngle !== null ? `✓ ${topAngle.toFixed(1)}°` : ''}
         </span>
       </div>
@@ -671,7 +671,7 @@ export const ClinometerTool: React.FC<ClinometerToolProps> = ({ treeData, readOn
                 type="number" step="0.1" inputMode="decimal" autoFocus
                 placeholder={`${step === 'base' ? 'Base' : 'Top'} angle (°)`}
                 onChange={(e) => { const v = parseFloat(e.target.value); liveAngleRef.current = isFinite(v) ? v : null; setLiveAngle(isFinite(v) ? v : null); }}
-                className="flex-1 px-3 py-3 rounded-lg bg-white/95 text-gray-900 text-lg"
+                className="flex-1 px-3 py-3 rounded-lg bg-white/95 text-[var(--text-primary)] text-lg"
               />
             </div>
           ) : null}

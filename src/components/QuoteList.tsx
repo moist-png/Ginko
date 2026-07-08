@@ -43,18 +43,18 @@ export const QuoteList: React.FC<QuoteListProps> = ({
 
   const getStatusColor = (status: Quote['status']) => {
     switch (status) {
-      case 'new': return 'bg-blue-100 text-blue-800';
-      case 'scheduled': return 'bg-purple-100 text-purple-800';
-      case 'completed': return 'bg-[rgba(90,143,90,0.15)] text-green-800';
-      default: return 'bg-[var(--surface-overlay)] text-gray-800';
+      case 'new': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      case 'scheduled': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      case 'completed': return 'bg-[rgba(138,111,76,0.15)] text-[var(--accent)]';
+      default: return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
     }
   };
 
   const getStatusDotColor = (status: Quote['status']) => {
     switch (status) {
-      case 'new': return 'bg-blue-500';
-      case 'scheduled': return 'bg-purple-500';
-      case 'completed': return 'bg-green-500';
+      case 'new': return 'bg-[var(--text-muted)]';
+      case 'scheduled': return 'bg-[var(--text-muted)]';
+      case 'completed': return 'bg-[var(--accent-soft)]0';
       default: return 'bg-[var(--forest)]0';
     }
   };
@@ -114,7 +114,7 @@ export const QuoteList: React.FC<QuoteListProps> = ({
       onClick={() => handleSort(field)}
       className={`flex items-center gap-1 px-2 py-1 rounded text-sm font-medium transition-colors ${
         sortField === field
-          ? 'bg-[rgba(90,143,90,0.15)] text-[var(--leaf)]'
+          ? 'bg-[rgba(138,111,76,0.15)] text-[var(--leaf)]'
           : 'text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)]'
       }`}
     >
@@ -139,14 +139,14 @@ export const QuoteList: React.FC<QuoteListProps> = ({
             <>
               <button
                 onClick={() => setShowEmailImport(true)}
-                className="flex items-center gap-2 border border-green-600 text-[var(--leaf)] px-4 py-2 rounded-lg hover:bg-green-50 transition-colors"
+                className="flex items-center gap-2 border border-[var(--accent)] text-[var(--leaf)] px-4 py-2 rounded-lg hover:bg-[var(--accent-soft)] transition-colors"
               >
                 <Upload size={20} />
                 Import from Email
               </button>
               <button
                 onClick={() => setShowCalendarImport(true)}
-                className="flex items-center gap-2 border border-blue-600 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                className="flex items-center gap-2 border border-[var(--border)] text-[var(--text-secondary)] px-4 py-2 rounded-lg hover:bg-[var(--surface-overlay)] transition-colors"
               >
                 <Upload size={20} />
                 Import from Calendar
@@ -198,7 +198,7 @@ export const QuoteList: React.FC<QuoteListProps> = ({
           placeholder="Search quotes by client, address, or job description..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
       </div>
 

@@ -217,10 +217,10 @@ John Smith`;
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center gap-3">
-            <Mail className="text-blue-600" size={24} />
+            <Mail className="text-[var(--text-secondary)]" size={24} />
             <div>
               <h2 className="text-xl font-semibold">Import Quotes from Email</h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-[var(--text-secondary)] mt-1">
                 Upload email files or enter email content manually to create quotes
               </p>
             </div>
@@ -230,7 +230,7 @@ John Smith`;
               onClose();
               resetModal();
             }}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-1 hover:bg-[var(--surface-overlay)] rounded-full transition-colors"
           >
             <X size={20} />
           </button>
@@ -244,19 +244,19 @@ John Smith`;
                 <div
                   className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                     dragActive
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-300 hover:border-gray-400'
+                      ? 'border-[var(--accent)] bg-[var(--surface-overlay)]'
+                      : 'border-[var(--border)] hover:border-[var(--border-bright)]'
                   }`}
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
                   onDragOver={handleDrag}
                   onDrop={handleDrop}
                 >
-                  <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <Upload className="mx-auto h-12 w-12 text-[var(--text-muted)] mb-4" />
+                  <h3 className="text-lg font-medium text-[var(--text-primary)] mb-2">
                     {isProcessing ? 'Processing email...' : 'Upload email file'}
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-[var(--text-secondary)] mb-4">
                     Drag and drop your email file here, or click to browse
                   </p>
                   <div className="flex gap-2 justify-center">
@@ -270,18 +270,18 @@ John Smith`;
                     <button
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isProcessing}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                      className="bg-[var(--ink)] text-[var(--cream)] px-4 py-2 rounded-lg hover:bg-[var(--accent)] transition-colors disabled:opacity-50"
                     >
                       {isProcessing ? 'Processing...' : 'Choose Email File'}
                     </button>
                     <button
                       onClick={() => setShowManualEntry(true)}
-                      className="border border-blue-600 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                      className="border border-[var(--border)] text-[var(--text-secondary)] px-4 py-2 rounded-lg hover:bg-[var(--surface-overlay)] transition-colors"
                     >
                       Enter Manually
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-[var(--text-muted)] mt-2">
                     Supports .eml email files and .txt files with email content
                   </p>
                 </div>
@@ -289,56 +289,56 @@ John Smith`;
 
               {/* Manual Entry Form */}
               {showManualEntry && (
-                <div className="border border-gray-200 rounded-lg p-6">
+                <div className="border border-[var(--border)] rounded-lg p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold">Manual Email Entry</h3>
                     <button
                       onClick={() => setShowManualEntry(false)}
-                      className="text-gray-500 hover:text-gray-700"
+                      className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                     >
                       <X size={20} />
                     </button>
                   </div>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                         From Email
                       </label>
                       <input
                         type="email"
                         value={manualEmail.from}
                         onChange={(e) => setManualEmail(prev => ({ ...prev, from: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                         placeholder="client@email.com"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                         Subject
                       </label>
                       <input
                         type="text"
                         value={manualEmail.subject}
                         onChange={(e) => setManualEmail(prev => ({ ...prev, subject: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                         placeholder="Tree removal quote request"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                         Email Body
                       </label>
                       <textarea
                         value={manualEmail.body}
                         onChange={(e) => setManualEmail(prev => ({ ...prev, body: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                        className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent resize-none"
                         rows={8}
                         placeholder="Enter the email content here..."
                       />
                     </div>
                     <button
                       onClick={handleManualEntry}
-                      className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                      className="w-full bg-[var(--ink)] text-[var(--cream)] py-2 rounded-lg hover:bg-[var(--accent)] transition-colors"
                     >
                       Process Email Content
                     </button>
@@ -347,9 +347,9 @@ John Smith`;
               )}
 
               {/* Instructions */}
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-medium text-blue-900 mb-2">How to get email files:</h4>
-                <div className="text-sm text-blue-700 space-y-2">
+              <div className="bg-[var(--surface-overlay)] p-4 rounded-lg">
+                <h4 className="font-medium text-[var(--text-primary)] mb-2">How to get email files:</h4>
+                <div className="text-sm text-[var(--text-secondary)] space-y-2">
                   <div>
                     <strong>Gmail:</strong> Open email → More (⋮) → Download message (.eml file)
                   </div>
@@ -366,17 +366,17 @@ John Smith`;
               </div>
 
               {/* Sample Download */}
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-[var(--surface-overlay)] p-4 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <Download className="text-gray-600 mt-1" size={20} />
+                  <Download className="text-[var(--text-secondary)] mt-1" size={20} />
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">Need a sample?</h4>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <h4 className="font-medium text-[var(--text-primary)]">Need a sample?</h4>
+                    <p className="text-sm text-[var(--text-secondary)] mb-3">
                       Download a sample email to see the expected format for quote requests.
                     </p>
                     <button
                       onClick={downloadSampleEmail}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      className="text-[var(--text-secondary)] hover:opacity-80 text-sm font-medium"
                     >
                       Download Sample Email
                     </button>
@@ -385,9 +385,9 @@ John Smith`;
               </div>
 
               {/* What gets extracted */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-medium text-gray-900 mb-2">What information is extracted?</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
+              <div className="bg-[var(--surface-overlay)] p-4 rounded-lg">
+                <h4 className="font-medium text-[var(--text-primary)] mb-2">What information is extracted?</h4>
+                <ul className="text-sm text-[var(--text-secondary)] space-y-1">
                   <li>• Client name and contact information</li>
                   <li>• Property address and location details</li>
                   <li>• Service requirements and job descriptions</li>
@@ -397,12 +397,12 @@ John Smith`;
               </div>
 
               {error && (
-                <div className="bg-red-50 p-4 rounded-lg">
+                <div className="bg-[rgba(179,67,61,0.08)] p-4 rounded-lg">
                   <div className="flex items-start gap-3">
-                    <AlertCircle className="text-red-600 mt-1" size={20} />
+                    <AlertCircle className="text-[var(--danger)] mt-1" size={20} />
                     <div>
-                      <h4 className="font-medium text-red-900">Processing Error</h4>
-                      <p className="text-sm text-red-700">{error}</p>
+                      <h4 className="font-medium text-[var(--text-primary)]">Processing Error</h4>
+                      <p className="text-sm text-[var(--danger)]">{error}</p>
                     </div>
                   </div>
                 </div>
@@ -411,14 +411,14 @@ John Smith`;
           ) : (
             <div className="space-y-4">
               {/* Processing Summary */}
-              <div className="bg-green-50 p-4 rounded-lg">
+              <div className="bg-[var(--accent-soft)] p-4 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="text-green-600 mt-1" size={20} />
+                  <CheckCircle className="text-[var(--accent)] mt-1" size={20} />
                   <div>
-                    <h4 className="font-medium text-green-900">
+                    <h4 className="font-medium text-[var(--text-primary)]">
                       Email processed successfully!
                     </h4>
-                    <p className="text-sm text-green-700">
+                    <p className="text-sm text-[var(--accent)]">
                       Review the extracted information below and confirm the import.
                     </p>
                   </div>
@@ -434,8 +434,8 @@ John Smith`;
                       key={index}
                       className={`border rounded-lg p-4 cursor-pointer transition-colors ${
                         selectedEmails.has(index)
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-[var(--accent)] bg-[var(--surface-overlay)]'
+                          : 'border-[var(--border)] hover:border-[var(--border)]'
                       }`}
                       onClick={() => toggleEmailSelection(index)}
                     >
@@ -448,30 +448,30 @@ John Smith`;
                         />
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <Mail size={16} className="text-blue-600" />
+                            <Mail size={16} className="text-[var(--text-secondary)]" />
                             <h4 className="font-medium">
                               From: {request.from}
                             </h4>
                           </div>
-                          <div className="text-sm text-gray-600 mb-3">
+                          <div className="text-sm text-[var(--text-secondary)] mb-3">
                             <strong>Subject:</strong> {request.subject}
                           </div>
                           
                           <div className="bg-white p-3 rounded border">
-                            <h5 className="font-medium text-gray-900 mb-2">Extracted Quote Information:</h5>
+                            <h5 className="font-medium text-[var(--text-primary)] mb-2">Extracted Quote Information:</h5>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                               <div><strong>Client:</strong> {quote.clientName}</div>
                               <div><strong>Mobile:</strong> {quote.mobile || 'Not provided'}</div>
                               <div><strong>Address:</strong> {quote.address || 'Not provided'}</div>
                               <div><strong>Date:</strong> {new Date(quote.scheduledDate).toLocaleDateString()}</div>
                               <div><strong>Time:</strong> {quote.scheduledTime}</div>
-                              <div><strong>Status:</strong> <span className="text-blue-600 font-medium">New</span></div>
+                              <div><strong>Status:</strong> <span className="text-[var(--text-secondary)] font-medium">New</span></div>
                             </div>
                             
                             {quote.jobDescription.length > 0 && (
                               <div className="mt-3">
                                 <strong className="text-sm">Services:</strong>
-                                <ul className="text-sm text-gray-600 mt-1">
+                                <ul className="text-sm text-[var(--text-secondary)] mt-1">
                                   {quote.jobDescription.map((item, idx) => (
                                     <li key={idx}>• {item.description}</li>
                                   ))}
@@ -483,8 +483,8 @@ John Smith`;
                               <div className="mt-3">
                                 <strong className="text-sm">Attachments:</strong>
                                 <div className="flex items-center gap-1 mt-1">
-                                  <Paperclip size={14} className="text-gray-500" />
-                                  <span className="text-sm text-gray-600">
+                                  <Paperclip size={14} className="text-[var(--text-muted)]" />
+                                  <span className="text-sm text-[var(--text-secondary)]">
                                     {request.attachments.length} file(s)
                                   </span>
                                 </div>
@@ -510,14 +510,14 @@ John Smith`;
                   onClose();
                   resetModal();
                 }}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-[var(--border)] rounded-lg hover:bg-[var(--surface-overlay)] transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleImport}
                 disabled={selectedEmails.size === 0}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-[var(--ink)] text-[var(--cream)] rounded-lg hover:bg-[var(--accent)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Import {selectedEmails.size} Quote{selectedEmails.size !== 1 ? 's' : ''}
               </button>

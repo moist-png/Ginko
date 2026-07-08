@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { signIn, signUp, signInAsGuest } from '../utils/auth';
-import { TreePine, Mail, Lock, User as UserIcon, Eye, EyeOff, AlertCircle, Key } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, Eye, EyeOff, AlertCircle, Key } from 'lucide-react';
+import ginkgoMark from '../assets/ginkgo-mark.png';
 
 interface LoginScreenProps {
   onLogin: () => void;
@@ -70,26 +71,24 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--forest)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 60% 60% at 70% 50%, rgba(61,107,61,0.12) 0%, transparent 70%)' }} />
+    <div style={{ minHeight: '100vh', background: 'var(--forest-mid)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative', overflow: 'hidden' }}>
+      <div className="grain-surface" />
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 60% 60% at 70% 50%, rgba(138,111,76,0.12) 0%, transparent 70%)' }} />
       <div style={{ width: '100%', maxWidth: '420px', position: 'relative', zIndex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'linear-gradient(135deg, var(--canopy), var(--forest-light))', border: '1px solid var(--border-bright)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
-            <TreePine size={32} color="var(--leaf)" />
-          </div>
-          <h1 style={{ fontFamily: 'DM Serif Display, serif', fontSize: '28px', color: 'var(--text-primary)', marginBottom: '6px', letterSpacing: '-0.02em' }}>Ginkgo</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Professional arborist management platform</p>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <img src={ginkgoMark} alt="Ginkgo" style={{ height: '88px', margin: '0 auto 16px' }} />
+          <h1 style={{ fontFamily: 'Newsreader, serif', fontWeight: 500, fontSize: '30px', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>Ginkgo</h1>
         </div>
 
-        <div style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: '16px', padding: '32px', boxShadow: '0 24px 64px rgba(0,0,0,0.4)' }}>
-          <div style={{ display: 'flex', marginBottom: '28px', background: 'var(--forest)', borderRadius: '10px', padding: '4px', border: '1px solid var(--border)' }}>
+        <div style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', borderRadius: '14px', padding: '32px', boxShadow: '0 24px 60px -24px rgba(40,35,25,0.3)' }}>
+          <div style={{ display: 'flex', marginBottom: '26px', background: 'var(--surface)', borderRadius: '9px', padding: '4px', border: '1px solid var(--border)' }}>
             {(['Sign In', 'Register'] as const).map((label, i) => (
-              <button key={label} onClick={() => { setIsLogin(i === 0); setError(null); setVerifyMessage(null); }} style={{ flex: 1, padding: '8px', borderRadius: '7px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', transition: 'all 0.2s', background: (i === 0) === isLogin ? 'var(--surface-overlay)' : 'transparent', border: (i === 0) === isLogin ? '1px solid var(--border-bright)' : '1px solid transparent', color: (i === 0) === isLogin ? 'var(--text-primary)' : 'var(--text-muted)' }}>{label}</button>
+              <button key={label} onClick={() => { setIsLogin(i === 0); setError(null); setVerifyMessage(null); }} style={{ flex: 1, padding: '9px', borderRadius: '6px', fontSize: '14px', fontWeight: (i === 0) === isLogin ? 600 : 500, cursor: 'pointer', transition: 'all 0.2s', background: (i === 0) === isLogin ? 'var(--surface-raised)' : 'transparent', border: (i === 0) === isLogin ? '1px solid var(--border)' : '1px solid transparent', color: (i === 0) === isLogin ? 'var(--text-primary)' : 'var(--text-muted)' }}>{label}</button>
             ))}
           </div>
 
           {verifyMessage && (
-            <div style={{ padding: '12px 14px', borderRadius: '8px', background: 'rgba(90,143,90,0.1)', border: '1px solid rgba(90,143,90,0.25)', color: 'var(--leaf)', fontSize: '13px', marginBottom: '16px' }}>
+            <div style={{ padding: '12px 14px', borderRadius: '8px', background: 'var(--accent-soft)', border: '1px solid var(--accent-soft-strong)', color: 'var(--accent)', fontSize: '13px', marginBottom: '16px' }}>
               {verifyMessage}
             </div>
           )}
@@ -132,11 +131,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
               </div>
             )}
             {error && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(180,60,60,0.1)', border: '1px solid rgba(180,60,60,0.25)', color: '#e88', fontSize: '13px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '8px', background: 'rgba(179,67,61,0.1)', border: '1px solid rgba(179,67,61,0.25)', color: 'var(--danger)', fontSize: '13px' }}>
                 <AlertCircle size={14} />{error}
               </div>
             )}
-            <button type="submit" disabled={!isFormValid() || isLoading} style={{ padding: '12px', borderRadius: '8px', fontSize: '15px', fontWeight: '600', marginTop: '4px', cursor: isFormValid() && !isLoading ? 'pointer' : 'not-allowed', transition: 'all 0.2s', background: isFormValid() && !isLoading ? 'var(--canopy)' : 'var(--surface-overlay)', border: isFormValid() && !isLoading ? '1px solid var(--moss)' : '1px solid var(--border)', color: isFormValid() && !isLoading ? 'var(--cream)' : 'var(--text-muted)' }}>
+            <button type="submit" disabled={!isFormValid() || isLoading} style={{ padding: '12px', borderRadius: '8px', fontSize: '15px', fontWeight: '600', marginTop: '4px', cursor: isFormValid() && !isLoading ? 'pointer' : 'not-allowed', transition: 'all 0.2s', background: isFormValid() && !isLoading ? 'var(--ink)' : 'var(--surface-overlay)', border: isFormValid() && !isLoading ? '1px solid var(--ink)' : '1px solid var(--border)', color: isFormValid() && !isLoading ? 'var(--cream)' : 'var(--text-muted)' }}>
               {isLoading ? 'Loading...' : isLogin ? 'Sign In' : 'Create Account'}
             </button>
           </form>

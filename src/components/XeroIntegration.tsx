@@ -158,7 +158,7 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
       <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-auto">
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+            <div className="w-8 h-8 bg-[var(--ink)] rounded flex items-center justify-center">
               <span className="text-white font-bold text-sm">X</span>
             </div>
             <h2 className="text-xl font-semibold">Send Quote to Xero</h2>
@@ -166,14 +166,14 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowConfig(!showConfig)}
-              className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+              className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
               title="Configure Xero API"
             >
               <Settings size={20} />
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+              className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
             >
               <X size={20} />
             </button>
@@ -183,37 +183,37 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
         <div className="p-6 space-y-6">
           {/* Configuration Panel */}
           {showConfig && (
-            <div className="bg-gray-50 p-4 rounded-lg space-y-4">
-              <h3 className="font-medium text-gray-900">Xero API Configuration</h3>
+            <div className="bg-[var(--surface-overlay)] p-4 rounded-lg space-y-4">
+              <h3 className="font-medium text-[var(--text-primary)]">Xero API Configuration</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                     Client ID
                   </label>
                   <input
                     type="text"
                     value={config.clientId}
                     onChange={(e) => setConfig(prev => ({ ...prev, clientId: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="Your Xero app Client ID"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                     Client Secret
                   </label>
                   <input
                     type="password"
                     value={config.clientSecret}
                     onChange={(e) => setConfig(prev => ({ ...prev, clientSecret: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                     placeholder="Your Xero app Client Secret"
                   />
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={saveConfig}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 bg-[var(--ink)] text-[var(--cream)] rounded-lg hover:bg-[var(--accent)] transition-colors"
                   >
                     Save Configuration
                   </button>
@@ -221,7 +221,7 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
                     href="https://developer.xero.com/app/manage"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 border border-[var(--border)] rounded-lg hover:bg-[var(--surface-overlay)] transition-colors"
                   >
                     <ExternalLink size={16} />
                     Xero Developer Portal
@@ -232,26 +232,26 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
           )}
 
           {/* Authentication Status */}
-          <div className="flex items-center gap-3 p-4 rounded-lg bg-gray-50">
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-[var(--surface-overlay)]">
             {isAuthenticated ? (
               <>
-                <CheckCircle className="text-green-600" size={24} />
+                <CheckCircle className="text-[var(--accent)]" size={24} />
                 <div>
-                  <p className="font-medium text-green-900">Connected to Xero</p>
-                  <p className="text-sm text-green-700">Ready to send quotes</p>
+                  <p className="font-medium text-[var(--text-primary)]">Connected to Xero</p>
+                  <p className="text-sm text-[var(--accent)]">Ready to send quotes</p>
                 </div>
               </>
             ) : (
               <>
-                <AlertCircle className="text-orange-600" size={24} />
+                <AlertCircle className="text-[var(--text-secondary)]" size={24} />
                 <div>
-                  <p className="font-medium text-orange-900">Not connected to Xero</p>
-                  <p className="text-sm text-orange-700">Authentication required</p>
+                  <p className="font-medium text-[var(--text-primary)]">Not connected to Xero</p>
+                  <p className="text-sm text-[var(--text-secondary)]">Authentication required</p>
                 </div>
                 <button
                   onClick={handleAuthenticate}
                   disabled={isLoading}
-                  className="ml-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  className="ml-auto px-4 py-2 bg-[var(--ink)] text-[var(--cream)] rounded-lg hover:bg-[var(--accent)] transition-colors disabled:opacity-50"
                 >
                   {isLoading ? <Loader className="animate-spin" size={16} /> : 'Connect to Xero'}
                 </button>
@@ -262,17 +262,17 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
           {/* Tenant Selection */}
           {isAuthenticated && tenants.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                 Select Xero Organization
               </label>
               <select
                 value={selectedTenant}
                 onChange={(e) => handleTenantSelect(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
               >
-                <option value="" className="bg-white text-gray-900">Select an organization...</option>
+                <option value="" className="bg-[var(--surface)] text-[var(--text-primary)]">Select an organization...</option>
                 {tenants.map(tenant => (
-                  <option key={tenant.tenantId} value={tenant.tenantId} className="bg-white text-gray-900">
+                  <option key={tenant.tenantId} value={tenant.tenantId} className="bg-[var(--surface)] text-[var(--text-primary)]">
                     {tenant.tenantName}
                   </option>
                 ))}
@@ -281,8 +281,8 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
           )}
 
           {/* Quote Preview */}
-          <div className="border border-gray-200 rounded-lg p-4">
-            <h3 className="font-medium text-gray-900 mb-3">Quote Preview</h3>
+          <div className="border border-[var(--border)] rounded-lg p-4">
+            <h3 className="font-medium text-[var(--text-primary)] mb-3">Quote Preview</h3>
             <div className="space-y-2 text-sm">
               <div><strong>Client:</strong> {quote.clientName}</div>
               <div><strong>Address:</strong> {quote.address}</div>
@@ -301,20 +301,20 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
 
           {/* Unit Amount Configuration */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
               Default Unit Amount (per service)
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-gray-500">$</span>
+              <span className="text-[var(--text-muted)]">$</span>
               <input
                 type="number"
                 value={unitAmount}
                 onChange={(e) => setUnitAmount(parseFloat(e.target.value) || 0)}
-                className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-32 px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 min="0"
                 step="0.01"
               />
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-[var(--text-muted)]">
                 Total estimate: ${(unitAmount * quote.jobDescription.length).toFixed(2)}
               </span>
             </div>
@@ -322,19 +322,19 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
 
           {/* Status Messages */}
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="p-4 bg-[rgba(179,67,61,0.08)] border border-[rgba(179,67,61,0.25)] rounded-lg">
               <div className="flex items-center gap-2">
-                <AlertCircle className="text-red-600" size={20} />
-                <p className="text-red-800">{error}</p>
+                <AlertCircle className="text-[var(--danger)]" size={20} />
+                <p className="text-[var(--danger)]">{error}</p>
               </div>
             </div>
           )}
 
           {success && (
-            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="p-4 bg-[var(--accent-soft)] border border-[var(--accent-soft-strong)] rounded-lg">
               <div className="flex items-center gap-2">
-                <CheckCircle className="text-green-600" size={20} />
-                <p className="text-green-800">{success}</p>
+                <CheckCircle className="text-[var(--accent)]" size={20} />
+                <p className="text-[var(--accent)]">{success}</p>
               </div>
             </div>
           )}
@@ -343,14 +343,14 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
           <div className="flex gap-3 pt-4 border-t">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-2 border border-[var(--border)] rounded-lg hover:bg-[var(--surface-overlay)] transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSendToXero}
               disabled={!isAuthenticated || !selectedTenant || isLoading}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-[var(--ink)] text-[var(--cream)] rounded-lg hover:bg-[var(--accent)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>

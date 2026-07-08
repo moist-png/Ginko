@@ -30,13 +30,13 @@ export const WorkDoneList: React.FC<WorkDoneListProps> = ({
 
   const getJobTypeColor = (jobType: Job['jobType']) => {
     switch (jobType) {
-      case 'assessment': return 'bg-purple-100 text-purple-800';
-      case 'pruning': return 'bg-[rgba(90,143,90,0.15)] text-green-800';
-      case 'removal': return 'bg-red-100 text-red-800';
-      case 'treatment': return 'bg-blue-100 text-blue-800';
-      case 'consultation': return 'bg-indigo-100 text-indigo-800';
-      case 'emergency': return 'bg-orange-100 text-orange-800';
-      default: return 'bg-[var(--surface-overlay)] text-gray-800';
+      case 'assessment': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      case 'pruning': return 'bg-[rgba(138,111,76,0.15)] text-[var(--accent)]';
+      case 'removal': return 'bg-[var(--surface-overlay)] text-[var(--danger)]';
+      case 'treatment': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      case 'consultation': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      case 'emergency': return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
+      default: return 'bg-[var(--surface-overlay)] text-[var(--text-secondary)]';
     }
   };
 
@@ -82,7 +82,7 @@ export const WorkDoneList: React.FC<WorkDoneListProps> = ({
       onClick={() => handleSort(field)}
       className={`flex items-center gap-1 px-2 py-1 rounded text-sm font-medium transition-colors ${
         sortField === field
-          ? 'bg-[rgba(90,143,90,0.15)] text-[var(--leaf)]'
+          ? 'bg-[rgba(138,111,76,0.15)] text-[var(--leaf)]'
           : 'text-[var(--text-secondary)] hover:bg-[var(--surface-overlay)]'
       }`}
     >
@@ -116,7 +116,7 @@ export const WorkDoneList: React.FC<WorkDoneListProps> = ({
           placeholder="Search jobs at this site..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
         />
       </div>
 

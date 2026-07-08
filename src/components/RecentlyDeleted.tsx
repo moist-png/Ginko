@@ -85,12 +85,12 @@ export const RecentlyDeleted: React.FC<RecentlyDeletedProps> = ({
     return (
       <div key={item.id} className="flex items-center justify-between p-3 bg-[var(--forest)] rounded-lg border border-[var(--border)]">
         <div>
-          <p className="font-medium text-gray-800">{itemName}</p>
+          <p className="font-medium text-[var(--text-secondary)]">{itemName}</p>
           <p className="text-xs text-[var(--text-muted)]">Deleted: {deletedDate}</p>
         </div>
         <button
           onClick={() => handleRecover(type, item.id)}
-          className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-[var(--cream)] rounded-md hover:bg-blue-600 transition-colors text-sm"
+          className="flex items-center gap-1 px-3 py-1 bg-[var(--text-muted)] text-[var(--cream)] rounded-md hover:bg-[var(--ink)] transition-colors text-sm"
         >
           <RotateCcw size={14} /> Recover
         </button>
