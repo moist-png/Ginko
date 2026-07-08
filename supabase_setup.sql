@@ -164,7 +164,11 @@ begin
   insert into public.profiles (id, name, email, role)
   values (
     new.id,
-    coalesce(new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
+    coalesce(
+      new.raw_user_meta_data->>'name',
+      nullif(split_part(coalesce(new.email, ''), '@', 1), ''),
+      'Guest'
+    ),
     coalesce(new.email, ''),
     'user'
   )
