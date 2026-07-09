@@ -37,6 +37,7 @@ export const defaultTreeData = (): TreeData => ({
   woundWoodDevelopment: 'Good',
   canopyCover: 0,
   location: '',
+  notes: [],
 });
 
 export const normaliseTreeData = (v: any): TreeData => ({ ...defaultTreeData(), ...(v || {}) });
@@ -59,6 +60,7 @@ export const fromDbTree = (t: any): Tree => ({
   canopyCover: num(t?.canopy_cover ?? t?.canopyCover),
   location: str(t?.location),
   coordinates: (t?.lat != null && t?.lng != null) ? { lat: num(t.lat), lng: num(t.lng) } : undefined,
+  notes: arr(t?.notes),
   createdAt: Date.now(),
   updatedAt: Date.now(),
 });
@@ -81,6 +83,7 @@ export const toDbTree = (t: Tree): Record<string, any> => ({
   location: str(t.location),
   lat: t.coordinates?.lat ?? null,
   lng: t.coordinates?.lng ?? null,
+  notes: t.notes ?? [],
   updated_at: nowIso(),
 });
 

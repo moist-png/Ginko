@@ -320,7 +320,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                     </label>
                     <input
                       type="number"
-                      value={editingReading.chlorophyllLevel}
+                      value={editingReading.chlorophyllLevel || ''}
                       onChange={(e) => updateReading('chlorophyllLevel', parseFloat(e.target.value) || 0)}
                       className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                       placeholder="0.0"
@@ -344,7 +344,7 @@ export const ChlorophyllEditor: React.FC<ChlorophyllEditorProps> = ({
                     </label>
                     <input
                       type="number"
-                      value={editingReading.extensionGrowth}
+                      value={editingReading.extensionGrowth || ''}
                       onChange={(e) => updateReading('extensionGrowth', parseFloat(e.target.value) || 0)}
                       className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                       placeholder="0"

@@ -184,7 +184,7 @@ export const TreeChlorophyllTab: React.FC<TreeChlorophyllTabProps> = ({
                 <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">Chlorophyll Level (SPAD)</label>
                 <input
                   type="number"
-                  value={form.chlorophyllLevel}
+                  value={form.chlorophyllLevel || ''}
                   onChange={(e) => setForm({ ...form, chlorophyllLevel: parseFloat(e.target.value) || 0 })}
                   className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   step="0.1" min="0" max="100" placeholder="0.0"
@@ -200,7 +200,7 @@ export const TreeChlorophyllTab: React.FC<TreeChlorophyllTabProps> = ({
                 <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">Extension Growth (mm)</label>
                 <input
                   type="number"
-                  value={form.extensionGrowth}
+                  value={form.extensionGrowth || ''}
                   onChange={(e) => setForm({ ...form, extensionGrowth: parseFloat(e.target.value) || 0 })}
                   className="w-full px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                   step="1" min="0" placeholder="0"

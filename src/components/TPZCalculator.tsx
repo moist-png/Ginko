@@ -19,10 +19,15 @@ interface TPZCalculatorProps {
  * For multi-stemmed trees, DBH is the combined diameter:
  *   DBH = sqrt(d1^2 + d2^2 + ... + dn^2)
  *
- * Encroachment uses the standard circular-segment method: for a straight
- * cut at distance d from the trunk centre (d < TPZ radius), the encroached
- * area is r^2 * acos(d/r) - d * sqrt(r^2 - d^2). AS 4970-2009 treats an
- * encroached area over 10% of the TPZ as a "major encroachment".
+ * Encroachment supports two shapes:
+ *  - A single straight edge (e.g. a fence line or trench), using the
+ *    circular-segment method: area = r^2*acos(d/r) - d*sqrt(r^2-d^2).
+ *  - A right-angled building corner poking into the TPZ, where the excised
+ *    area is the part of the circle beyond BOTH walls (the quadrant
+ *    x>w AND y>h once the trunk is the origin). There's no closed-form
+ *    formula for a circle-quadrant intersection, so it's found by numerical
+ *    integration, which is exact enough for this use and always stable.
+ * AS 4970-2009 treats an encroached area over 10% of the TPZ as "major".
  */
 
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
@@ -63,6 +68,36 @@ const calcEncroachment = (tpzRadius: number, srzRadius: number, distance: number
   return { areaPct, severity };
 };
 
+// Area of a circle (radius r, centred on the trunk) that lies beyond a
+// right-angle corner offset by w (horizontal) and h (vertical) from the
+// trunk — i.e. the region {x > w AND y > h}. Found by numerically
+// integrating the circle's height above h, from x=w out to where the
+// circle drops back below h.
+const circleCornerOverlapArea = (r: number, w: number, h: number, steps = 600): number => {
+  if (w >= r || h >= r || w < 0 || h < 0) return 0;
+  const xEnd = Math.sqrt(Math.max(0, r * r - h * h));
+  if (xEnd <= w) return 0;
+  const dx = (xEnd - w) / steps;
+  let area = 0;
+  for (let i = 0; i < steps; i++) {
+    const x = w + dx * (i + 0.5);
+    const yTop = Math.sqrt(Math.max(0, r * r - x * x));
+    area += Math.max(0, yTop - h) * dx;
+  }
+  return area;
+};
+
+const calcCornerEncroachment = (tpzRadius: number, srzRadius: number, wallHorizontal: number, wallVertical: number) => {
+  if (!Number.isFinite(wallHorizontal) || !Number.isFinite(wallVertical) || wallHorizontal < 0 || wallVertical < 0 || tpzRadius <= 0) return null;
+  const r = tpzRadius;
+  const area = circleCornerOverlapArea(r, wallHorizontal, wallVertical);
+  const areaPct = (area / (Math.PI * r * r)) * 100;
+  // The closest point of the building to the trunk is the corner itself.
+  const cornerDistance = Math.sqrt(wallHorizontal * wallHorizontal + wallVertical * wallVertical);
+  const severity: Severity = cornerDistance < srzRadius ? 'srz' : areaPct > 10 ? 'major' : areaPct > 0.01 ? 'minor' : 'none';
+  return { areaPct, severity };
+};
+
 const fmt = (n: number, dp = 2) => (Number.isFinite(n) ? n.toFixed(dp) : '—');
 
 export const TPZCalculator: React.FC<TPZCalculatorProps> = ({ treeData }) => {
@@ -75,7 +110,10 @@ export const TPZCalculator: React.FC<TPZCalculatorProps> = ({ treeData }) => {
   const [srzSameAsDbh, setSrzSameAsDbh] = useState(true);
   const [srzDiameterCmManual, setSrzDiameterCmManual] = useState<number>(initialDbhCm);
 
+  const [encroachMode, setEncroachMode] = useState<'straight' | 'corner'>('straight');
   const [encroachDistance, setEncroachDistance] = useState<string>('');
+  const [cornerHorizontal, setCornerHorizontal] = useState<string>(''); // distance to the vertical wall
+  const [cornerVertical, setCornerVertical] = useState<string>(''); // distance to the horizontal wall
 
   const dbhCm = stemMode === 'single' ? singleDiameterCm : combinedDbhCm(stems);
   const dbhM = dbhCm / 100;
@@ -86,11 +124,20 @@ export const TPZCalculator: React.FC<TPZCalculatorProps> = ({ treeData }) => {
   const tpz = useMemo(() => calcTpzRadiusM(dbhM), [dbhM]);
   const srzRadius = useMemo(() => calcSrzRadiusM(srzDiameterM), [srzDiameterM]);
 
-  const encroachment = useMemo(() => {
+  const straightResult = useMemo(() => {
     const d = parseFloat(encroachDistance);
     if (encroachDistance === '' || !Number.isFinite(d)) return null;
     return calcEncroachment(tpz.radius, srzRadius, d);
   }, [encroachDistance, tpz.radius, srzRadius]);
+
+  const cornerResult = useMemo(() => {
+    const w = parseFloat(cornerHorizontal);
+    const h = parseFloat(cornerVertical);
+    if (cornerHorizontal === '' || cornerVertical === '' || !Number.isFinite(w) || !Number.isFinite(h)) return null;
+    return calcCornerEncroachment(tpz.radius, srzRadius, w, h);
+  }, [cornerHorizontal, cornerVertical, tpz.radius, srzRadius]);
+
+  const encroachment = encroachMode === 'straight' ? straightResult : cornerResult;
 
   const updateStem = (i: number, value: number) => {
     setStems((prev) => prev.map((s, idx) => (idx === i ? value : s)));
@@ -104,8 +151,13 @@ export const TPZCalculator: React.FC<TPZCalculatorProps> = ({ treeData }) => {
   const tpzPx = tpz.radius * scale;
   const srzPx = srzRadius * scale;
   const centre = 150;
-  const encroachD = encroachment && encroachment.severity !== 'none' ? parseFloat(encroachDistance) : null;
-  const encroachLineX = encroachD !== null ? centre + encroachD * scale : null;
+
+  const showStraightLine = encroachMode === 'straight' && straightResult && straightResult.severity !== 'none';
+  const encroachLineX = showStraightLine ? centre + parseFloat(encroachDistance) * scale : null;
+
+  const showCorner = encroachMode === 'corner' && cornerResult && cornerResult.severity !== 'none';
+  const cornerWPx = showCorner ? centre + parseFloat(cornerHorizontal) * scale : null;
+  const cornerHPx = showCorner ? centre - parseFloat(cornerVertical) * scale : null;
 
   return (
     <div className="p-4 sm:p-6 max-w-2xl mx-auto pb-16">
@@ -257,6 +309,11 @@ export const TPZCalculator: React.FC<TPZCalculatorProps> = ({ treeData }) => {
         {/* Diagram */}
         <div className="flex justify-center">
           <svg viewBox="0 0 300 300" width="220" height="220">
+            <defs>
+              <clipPath id="tpzCircleClip">
+                <circle cx={centre} cy={centre} r={tpzPx} />
+              </clipPath>
+            </defs>
             <circle cx={centre} cy={centre} r={tpzPx} fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeDasharray="5 4" />
             {srzPx > 0 && (
               <circle cx={centre} cy={centre} r={srzPx} fill="var(--accent-soft)" stroke="var(--text-primary)" strokeWidth="1.5" />
@@ -265,6 +322,17 @@ export const TPZCalculator: React.FC<TPZCalculatorProps> = ({ treeData }) => {
             {encroachLineX !== null && (
               <line x1={encroachLineX} y1={centre - 130} x2={encroachLineX} y2={centre + 130} stroke="var(--danger)" strokeWidth="1.5" strokeDasharray="3 3" />
             )}
+            {cornerWPx !== null && cornerHPx !== null && (
+              <g clipPath="url(#tpzCircleClip)">
+                <rect x={cornerWPx} y="0" width={300} height={Math.max(0, cornerHPx)} fill="rgba(179,67,61,0.22)" />
+              </g>
+            )}
+            {cornerWPx !== null && cornerHPx !== null && (
+              <>
+                <line x1={cornerWPx} y1="0" x2={cornerWPx} y2={cornerHPx} stroke="var(--danger)" strokeWidth="1.5" strokeDasharray="3 3" />
+                <line x1={cornerWPx} y1={cornerHPx} x2="300" y2={cornerHPx} stroke="var(--danger)" strokeWidth="1.5" strokeDasharray="3 3" />
+              </>
+            )}
             <text x={centre} y={centre - tpzPx - 8} textAnchor="middle" fontSize="10" fill="var(--text-muted)">TPZ</text>
             {srzPx > 6 && (
               <text x={centre} y={centre - srzPx - 6} textAnchor="middle" fontSize="10" fill="var(--text-secondary)">SRZ</text>
@@ -272,25 +340,83 @@ export const TPZCalculator: React.FC<TPZCalculatorProps> = ({ treeData }) => {
             {encroachLineX !== null && (
               <text x={encroachLineX} y={centre - 136} textAnchor="middle" fontSize="9" fill="var(--danger)">works</text>
             )}
+            {cornerWPx !== null && cornerHPx !== null && (
+              <text x={cornerWPx + 6} y={Math.max(10, cornerHPx - 6)} fontSize="9" fill="var(--danger)">works</text>
+            )}
           </svg>
         </div>
       </div>
 
       {/* --- Encroachment --- */}
       <div className="rounded-xl p-4" style={{ border: '1px solid var(--border)', background: 'var(--surface-raised)' }}>
-        <span className="section-label">Encroachment check (optional)</span>
-        <p className="text-xs mt-1.5 mb-3" style={{ color: 'var(--text-muted)' }}>
-          Distance from the trunk centre to the nearest edge of proposed works (m).
-        </p>
-        <input
-          type="number"
-          inputMode="decimal"
-          step="0.1"
-          value={encroachDistance}
-          onChange={(e) => setEncroachDistance(e.target.value)}
-          className="input-field"
-          placeholder="e.g. 4.5"
-        />
+        <div className="flex items-center justify-between mb-1">
+          <span className="section-label">Encroachment check (optional)</span>
+          <div className="flex rounded-lg overflow-hidden" style={{ border: '1px solid var(--border)' }}>
+            <button
+              onClick={() => setEncroachMode('straight')}
+              className="px-3 py-1.5 text-xs font-medium transition-colors"
+              style={encroachMode === 'straight' ? { background: 'var(--accent-soft)', color: 'var(--accent)' } : { color: 'var(--text-secondary)' }}
+            >
+              Single edge
+            </button>
+            <button
+              onClick={() => setEncroachMode('corner')}
+              className="px-3 py-1.5 text-xs font-medium transition-colors"
+              style={encroachMode === 'corner' ? { background: 'var(--accent-soft)', color: 'var(--accent)' } : { color: 'var(--text-secondary)' }}
+            >
+              Building corner
+            </button>
+          </div>
+        </div>
+
+        {encroachMode === 'straight' ? (
+          <>
+            <p className="text-xs mt-1.5 mb-3" style={{ color: 'var(--text-muted)' }}>
+              Distance from the trunk centre to the nearest edge of proposed works (m).
+            </p>
+            <input
+              type="number"
+              inputMode="decimal"
+              step="0.1"
+              value={encroachDistance}
+              onChange={(e) => setEncroachDistance(e.target.value)}
+              className="input-field"
+              placeholder="e.g. 4.5"
+            />
+          </>
+        ) : (
+          <>
+            <p className="text-xs mt-1.5 mb-3" style={{ color: 'var(--text-muted)' }}>
+              For a structure with a right-angle corner cutting into the TPZ — enter the perpendicular distance from the trunk to each wall.
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label>Horizontal incursion (m)</label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  step="0.1"
+                  value={cornerHorizontal}
+                  onChange={(e) => setCornerHorizontal(e.target.value)}
+                  className="input-field"
+                  placeholder="e.g. 3.0"
+                />
+              </div>
+              <div>
+                <label>Vertical (m)</label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  step="0.1"
+                  value={cornerVertical}
+                  onChange={(e) => setCornerVertical(e.target.value)}
+                  className="input-field"
+                  placeholder="e.g. 2.0"
+                />
+              </div>
+            </div>
+          </>
+        )}
 
         {encroachment && (
           <div className="mt-4">

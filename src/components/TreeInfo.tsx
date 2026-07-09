@@ -86,7 +86,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
             </label>
             <input
               type="number"
-              value={data.dbh}
+              value={data.dbh || ''}
               disabled={readOnly}
               onChange={(e) => handleChange('dbh', parseFloat(e.target.value) || 0)}
               className="input-field disabled:cursor-not-allowed"
@@ -101,7 +101,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
             </label>
             <input
               type="number"
-              value={data.height}
+              value={data.height || ''}
               disabled={readOnly}
               onChange={(e) => handleChange('height', parseFloat(e.target.value) || 0)}
               className="input-field disabled:cursor-not-allowed"
@@ -116,7 +116,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
             </label>
             <input
               type="number"
-              value={data.extensionGrowth}
+              value={data.extensionGrowth || ''}
               disabled={readOnly}
               onChange={(e) => handleChange('extensionGrowth', parseFloat(e.target.value) || 0)}
               className="input-field disabled:cursor-not-allowed"
@@ -133,7 +133,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
             </label>
             <input
               type="number"
-              value={data.canopySpreadNS}
+              value={data.canopySpreadNS || ''}
               disabled={readOnly}
               onChange={(e) => handleChange('canopySpreadNS', parseFloat(e.target.value) || 0)}
               className="input-field disabled:cursor-not-allowed"
@@ -148,7 +148,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
             </label>
             <input
               type="number"
-              value={data.canopySpreadEW}
+              value={data.canopySpreadEW || ''}
               disabled={readOnly}
               onChange={(e) => handleChange('canopySpreadEW', parseFloat(e.target.value) || 0)}
               className="input-field disabled:cursor-not-allowed"
@@ -164,7 +164,7 @@ export const TreeInfo: React.FC<TreeInfoProps> = ({ treeData, readOnly = false, 
           </label>
           <input
             type="number"
-            value={data.canopyCover}
+            value={data.canopyCover || ''}
             disabled={readOnly}
             onChange={(e) => handleChange('canopyCover', parseFloat(e.target.value) || 0)}
             className="input-field disabled:cursor-not-allowed"

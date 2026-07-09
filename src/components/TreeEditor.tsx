@@ -5,7 +5,8 @@ import { SpeciesIdentifier } from './SpeciesIdentifier';
 import { ClinometerTool } from './ClinometerTool';
 import { TPZCalculator } from './TPZCalculator';
 import { TreeChlorophyllTab } from './TreeChlorophyllTab';
-import { ArrowLeft, Save, TreePine, Leaf, Ruler, Shield, Activity, FileText, Trash2, Plus, Calendar } from 'lucide-react';
+import { NotesSection } from './NotesSection';
+import { ArrowLeft, Save, TreePine, Leaf, Ruler, Shield, Activity, StickyNote, FileText, Trash2, Plus, Calendar } from 'lucide-react';
 import { canUserEdit } from '../utils/auth';
 import { db } from '../utils/offline';
 import { toDbTree, fromDbTree } from '../utils/mappers';
@@ -26,7 +27,7 @@ interface TreeEditorProps {
 export const TreeEditor: React.FC<TreeEditorProps> = ({
   tree, site, reports, isNew, onSave, onDelete, onBack, onCreateReportForTree, onOpenReport
 }) => {
-  const [activeTab, setActiveTab] = useState<'info' | 'species' | 'height' | 'tpz' | 'chlorophyll' | 'reports'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'species' | 'height' | 'tpz' | 'chlorophyll' | 'notes' | 'reports'>('info');
   const [editingTree, setEditingTree] = useState<Tree>(fromDbTree(tree));
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
@@ -58,6 +59,7 @@ export const TreeEditor: React.FC<TreeEditorProps> = ({
     { id: 'height', label: 'Measure Height', icon: Ruler },
     { id: 'tpz', label: 'TPZ / SRZ', icon: Shield },
     { id: 'chlorophyll', label: 'Chlorophyll', icon: Activity },
+    { id: 'notes', label: 'Notes', icon: StickyNote },
     { id: 'reports', label: `Reports (${reports.length})`, icon: FileText },
   ];
 
@@ -144,6 +146,14 @@ export const TreeEditor: React.FC<TreeEditorProps> = ({
               treeSpecies={editingTree.species || editingTree.commonName || editingTree.treeNumber}
               treeLocation={editingTree.location}
               readOnly={!canEdit}
+            />
+          )}
+
+          {activeTab === 'notes' && (
+            <NotesSection
+              notes={editingTree.notes}
+              readOnly={!canEdit}
+              onUpdate={(notes) => setEditingTree(prev => ({ ...prev, notes }))}
             />
           )}
 

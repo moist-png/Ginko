@@ -308,7 +308,7 @@ export const XeroIntegration: React.FC<XeroIntegrationProps> = ({
               <span className="text-[var(--text-muted)]">$</span>
               <input
                 type="number"
-                value={unitAmount}
+                value={unitAmount || ''}
                 onChange={(e) => setUnitAmount(parseFloat(e.target.value) || 0)}
                 className="w-32 px-3 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
                 min="0"

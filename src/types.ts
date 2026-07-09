@@ -16,6 +16,7 @@ export interface TreeData {
     lat: number;
     lng: number;
   };
+  notes: Note[];
 }
 
 export interface Photo {
