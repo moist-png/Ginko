@@ -3,8 +3,9 @@ import { Tree, ArboristReport, Site } from '../types';
 import { TreeInfo } from './TreeInfo';
 import { SpeciesIdentifier } from './SpeciesIdentifier';
 import { ClinometerTool } from './ClinometerTool';
+import { TPZCalculator } from './TPZCalculator';
 import { TreeChlorophyllTab } from './TreeChlorophyllTab';
-import { ArrowLeft, Save, TreePine, Leaf, Ruler, Activity, FileText, Trash2, Plus, Calendar } from 'lucide-react';
+import { ArrowLeft, Save, TreePine, Leaf, Ruler, Shield, Activity, FileText, Trash2, Plus, Calendar } from 'lucide-react';
 import { canUserEdit } from '../utils/auth';
 import { db } from '../utils/offline';
 import { toDbTree, fromDbTree } from '../utils/mappers';
@@ -25,7 +26,7 @@ interface TreeEditorProps {
 export const TreeEditor: React.FC<TreeEditorProps> = ({
   tree, site, reports, isNew, onSave, onDelete, onBack, onCreateReportForTree, onOpenReport
 }) => {
-  const [activeTab, setActiveTab] = useState<'info' | 'species' | 'height' | 'chlorophyll' | 'reports'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'species' | 'height' | 'tpz' | 'chlorophyll' | 'reports'>('info');
   const [editingTree, setEditingTree] = useState<Tree>(fromDbTree(tree));
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
@@ -55,6 +56,7 @@ export const TreeEditor: React.FC<TreeEditorProps> = ({
     { id: 'info', label: 'Tree Info', icon: TreePine },
     { id: 'species', label: 'Identify Species', icon: Leaf },
     { id: 'height', label: 'Measure Height', icon: Ruler },
+    { id: 'tpz', label: 'TPZ / SRZ', icon: Shield },
     { id: 'chlorophyll', label: 'Chlorophyll', icon: Activity },
     { id: 'reports', label: `Reports (${reports.length})`, icon: FileText },
   ];
@@ -130,6 +132,10 @@ export const TreeEditor: React.FC<TreeEditorProps> = ({
 
           {activeTab === 'height' && (
             <ClinometerTool treeData={editingTree} readOnly={!canEdit} onUpdate={(d) => setEditingTree(prev => ({ ...prev, ...d }))} />
+          )}
+
+          {activeTab === 'tpz' && (
+            <TPZCalculator treeData={editingTree} />
           )}
 
           {activeTab === 'chlorophyll' && (
