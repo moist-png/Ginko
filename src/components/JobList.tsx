@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
-import { Job } from '../types';
+import { Job, Site } from '../types';
 import { formatDate, formatTime } from '../utils/storage';
-import { Plus, Search, Briefcase, Calendar, Clock, MapPin, User, DollarSign, ArrowUpDown, Download } from 'lucide-react';
+import { Plus, Search, Briefcase, Calendar, Clock, MapPin, User, DollarSign, ArrowUpDown, Download, Repeat, Scroll } from 'lucide-react';
 import { exportJobsCSV } from '../utils/exportUtils';
 import { canUserEdit } from '../utils/auth';
 import { ExportModal } from './ExportModal';
+import { ContractList } from './ContractList';
+import { PermitTracker } from './PermitTracker';
 import type { TeamMember } from '../utils/supabase';
+
+type JobsSubTab = 'jobs' | 'contracts' | 'permits';
 
 interface JobListProps {
   jobs: Job[];
   teamMembers: TeamMember[];
+  sites: Site[];
   onSelectJob: (job: Job) => void;
   onCreateJob: () => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  activeTab: JobsSubTab;
+  onTabChange: (tab: JobsSubTab) => void;
+  onJobCreated?: () => void;
 }
 
 type SortField = 'date' | 'clientName' | 'status' | 'jobType' | 'timeSpent' | 'totalCost';
@@ -42,7 +50,7 @@ const STATUS_STYLES: Record<Job['status'], { bg: string; color: string }> = {
   cancelled: { bg: 'var(--surface-overlay)', color: 'var(--text-muted)' },
 };
 
-export const JobList: React.FC<JobListProps> = ({ jobs, teamMembers, onSelectJob, onCreateJob, searchQuery, onSearchChange }) => {
+export const JobList: React.FC<JobListProps> = ({ jobs, teamMembers, sites, onSelectJob, onCreateJob, searchQuery, onSearchChange, activeTab, onTabChange, onJobCreated }) => {
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [showExportModal, setShowExportModal] = useState(false);
@@ -88,12 +96,32 @@ export const JobList: React.FC<JobListProps> = ({ jobs, teamMembers, onSelectJob
           <h1 style={{ fontFamily: 'Newsreader, serif', fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>Job Management</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{jobs.length} {jobs.length === 1 ? 'job' : 'jobs'} total</p>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button onClick={() => setShowExportModal(true)} className="btn-secondary" style={{ padding: '9px 12px' }}><Download size={16} /></button>
-          {canEdit && <button onClick={onCreateJob} className="btn-primary"><Plus size={16} /> New Job</button>}
-        </div>
+        {activeTab === 'jobs' && (
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={() => setShowExportModal(true)} className="btn-secondary" style={{ padding: '9px 12px' }}><Download size={16} /></button>
+            {canEdit && <button onClick={onCreateJob} className="btn-primary"><Plus size={16} /> New Job</button>}
+          </div>
+        )}
       </div>
 
+      <div style={{ display: 'flex', gap: '6px', borderBottom: '1px solid var(--border)' }}>
+        <button onClick={() => onTabChange('jobs')} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 4px', marginRight: '20px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', background: 'transparent', border: 'none', borderBottom: activeTab === 'jobs' ? '2px solid var(--accent)' : '2px solid transparent', color: activeTab === 'jobs' ? 'var(--accent)' : 'var(--text-muted)' }}>
+          <Briefcase size={14} /> Jobs
+        </button>
+        <button onClick={() => onTabChange('contracts')} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 4px', marginRight: '20px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', background: 'transparent', border: 'none', borderBottom: activeTab === 'contracts' ? '2px solid var(--accent)' : '2px solid transparent', color: activeTab === 'contracts' ? 'var(--accent)' : 'var(--text-muted)' }}>
+          <Repeat size={14} /> Contracts
+        </button>
+        <button onClick={() => onTabChange('permits')} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 4px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', background: 'transparent', border: 'none', borderBottom: activeTab === 'permits' ? '2px solid var(--accent)' : '2px solid transparent', color: activeTab === 'permits' ? 'var(--accent)' : 'var(--text-muted)' }}>
+          <Scroll size={14} /> Permits
+        </button>
+      </div>
+
+      {activeTab === 'contracts' ? (
+        <ContractList sites={sites} teamMembers={teamMembers} onJobCreated={onJobCreated} />
+      ) : activeTab === 'permits' ? (
+        <PermitTracker sites={sites} />
+      ) : (
+      <>
       <div style={{ position: 'relative' }}>
         <Search size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
         <input type="text" placeholder="Search jobs..." value={searchQuery} onChange={e => onSearchChange(e.target.value)} className="input-field" style={{ paddingLeft: '42px' }} />
@@ -158,6 +186,8 @@ export const JobList: React.FC<JobListProps> = ({ jobs, teamMembers, onSelectJob
       </div>
 
       <ExportModal isOpen={showExportModal} onClose={() => setShowExportModal(false)} title="Jobs Data" data={jobs} exportFunctions={{ csv: () => exportJobsCSV(jobs) }} emailOptions={{ defaultSubject: 'Jobs Export', defaultBody: 'Please find the attached jobs export.' }} />
+      </>
+      )}
     </div>
   );
 };

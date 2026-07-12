@@ -22,15 +22,13 @@ import { PortalView } from './components/ClientPortal';
 import { InviteJoin } from './components/InviteJoin';
 import { MessageBoard } from './components/MessageBoard';
 import { NotificationBell } from './components/NotificationBell';
-import { PermitTracker } from './components/PermitTracker';
-import { ContractList } from './components/ContractList';
 import type { Site } from './types';
 import { db, getPendingCount, syncQueue } from './utils/offline';
 import { fromDbSite, fromDbReport, fromDbTree, fromDbJob, fromDbQuote, fromDbRisk, toDbTree } from './utils/mappers';
 import ginkgoMark from './assets/ginkgo-mark.png';
 import {
   Home, TreePine, Shield, FileText, Menu, X,
-  LogOut, Trash2, Users, LayoutDashboard, WifiOff, MessageSquare, Scroll, Repeat
+  LogOut, Trash2, Users, LayoutDashboard, WifiOff, MessageSquare
 } from 'lucide-react';
 
 type AppView = 'dashboard' | 'sites' | 'reports' | 'jobs' | 'daily-risk' | 'quotes' | 'team' | 'board' | 'permits' | 'contracts';
@@ -57,6 +55,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState<AppView>('dashboard');
   const [siteDetailSubView, setSiteDetailSubView] = useState<'trees' | 'reports' | 'work-done' | 'permits' | 'protection-zones'>('trees');
+  const [jobsSubView, setJobsSubView] = useState<'jobs' | 'contracts' | 'permits'>('jobs');
   const [selectedReport, setSelectedReport] = useState<any>(null);
   const [selectedTree, setSelectedTree] = useState<any>(null);
   const [selectedSite, setSelectedSite] = useState<any>(null);
@@ -172,6 +171,8 @@ function App() {
     if (view === 'new-quote') { setCurrentView('quotes'); setSelectedQuote({ id: crypto.randomUUID(), client_name: '', address: '', mobile: '', site_contact: '', scheduled_date: today(), scheduled_time: '09:00', job_description: [{ id: crypto.randomUUID(), description: '' }], additional_equipment: '', access_parking: '', status: 'new', archived: false, created_at: nowIso(), updated_at: nowIso() }); setIsNewItem(true); return; }
     if (view === 'new-risk') { setCurrentView('daily-risk'); setSelectedRisk({ id: crypto.randomUUID(), site_address: '', date: today(), client_name: '', client_mobile: '', first_aid_location: '', nearest_hospital: '', hazards: {}, hazard_controls: [], signatures: [], created_at: nowIso(), updated_at: nowIso() }); setIsNewItem(true); return; }
     if (view === 'team') { setCurrentView('team'); }
+    else if (view === 'contracts' || view === 'permits') { setCurrentView('jobs'); setJobsSubView(view); }
+    else if (view === 'jobs') { setCurrentView('jobs'); setJobsSubView('jobs'); }
     else setCurrentView(view as AppView);
     setSearchQuery('');
     setSelectedReport(null); setSelectedTree(null); setSelectedSite(null);
@@ -218,8 +219,6 @@ function App() {
     { view: 'jobs' as AppView, icon: TreePine, label: 'Jobs' },
     { view: 'daily-risk' as AppView, icon: Shield, label: 'Risk' },
     { view: 'quotes' as AppView, icon: FileText, label: 'Quotes' },
-    { view: 'contracts' as AppView, icon: Repeat, label: 'Contracts' },
-    { view: 'permits' as AppView, icon: Scroll, label: 'Permits' },
     { view: 'team' as AppView, icon: Users, label: 'Team' },
     { view: 'board' as AppView, icon: MessageSquare, label: 'Board' },
   ];
@@ -400,17 +399,13 @@ function App() {
           />
         )}
 
-        {currentView === 'jobs' && <JobList jobs={jobs} teamMembers={teamMembers} onSelectJob={setSelectedJob} onCreateJob={() => { setSelectedJob({ id: crypto.randomUUID(), title: '', client_name: '', location: '', date: today(), start_time: '', end_time: '', time_spent: 0, work_completed: '', work_to_complete: '', notes: '', status: 'scheduled', job_type: 'assessment', hourly_rate: 0, total_cost: 0, assigned_to: [], created_at: nowIso(), updated_at: nowIso() }); setIsNewItem(true); }} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
+        {currentView === 'jobs' && <JobList jobs={jobs} teamMembers={teamMembers} sites={sites as Site[]} activeTab={jobsSubView} onTabChange={setJobsSubView} onJobCreated={loadCoreData} onSelectJob={setSelectedJob} onCreateJob={() => { setSelectedJob({ id: crypto.randomUUID(), title: '', client_name: '', location: '', date: today(), start_time: '', end_time: '', time_spent: 0, work_completed: '', work_to_complete: '', notes: '', status: 'scheduled', job_type: 'assessment', hourly_rate: 0, total_cost: 0, assigned_to: [], created_at: nowIso(), updated_at: nowIso() }); setIsNewItem(true); }} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
 
         {currentView === 'daily-risk' && <DailyRiskList risks={risks} onSelectRisk={setSelectedRisk} onCreateRisk={() => { setSelectedRisk({ id: crypto.randomUUID(), site_address: '', date: today(), client_name: '', client_mobile: '', first_aid_location: '', nearest_hospital: '', hazards: {workingAtHeights:false,unstableGround:false,powerlines:false,undergroundServices:false,siteWorkers:false,pedestrians:false,traffic:false,noise:false,chainsaws:false,loweringDevices:false,ewp:false,crane:false,deadBranches:false,brokenBranches:false,deadTree:false,barkInclusions:false,treeLean:false,fallenTree:false,wildlife:false}, hazard_controls: [], signatures: [], created_at: nowIso(), updated_at: nowIso() }); setIsNewItem(true); }} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
 
         {currentView === 'quotes' && <QuoteList quotes={quotes} teamMembers={teamMembers} onSelectQuote={setSelectedQuote} onCreateQuote={() => { setSelectedQuote({ id: crypto.randomUUID(), client_name: '', address: '', mobile: '', site_contact: '', scheduled_date: today(), scheduled_time: '09:00', job_description: [{ id: crypto.randomUUID(), description: '' }], additional_equipment: '', access_parking: '', status: 'new', archived: false, assigned_to: [], created_at: nowIso(), updated_at: nowIso() }); setIsNewItem(true); }} onImportQuotes={() => {}} onUpdateQuoteStatus={handleUpdateQuoteStatus} searchQuery={searchQuery} onSearchChange={setSearchQuery} />}
 
         {currentView === 'board' && <MessageBoard teamMembers={teamMembers} />}
-
-        {currentView === 'permits' && <PermitTracker sites={sites as Site[]} />}
-
-        {currentView === 'contracts' && <ContractList sites={sites as Site[]} teamMembers={teamMembers} onJobCreated={loadCoreData} />}
       </main>
 
       <RecentlyDeleted isOpen={showRecentlyDeleted} onClose={() => setShowRecentlyDeleted(false)} onRecover={() => { loadCoreData(); setShowRecentlyDeleted(false); }} />
