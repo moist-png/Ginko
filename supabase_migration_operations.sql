@@ -3,10 +3,27 @@
 --  Quote Follow-up
 --
 --  Run this in Supabase: Project -> SQL Editor -> New query -> paste -> Run.
---  Safe to run more than once — every statement is "if not exists".
---  Run AFTER supabase_migration_teams.sql (it uses the helper functions and
---  team_members table that migration creates).
+--  Safe to run more than once — every statement is "if not exists" or
+--  "create or replace".
 -- ============================================================================
+
+-- ----------------------------------------------------------------------------
+-- 0. Make sure the helper functions used by the policies below exist.
+--    (These normally come from supabase_migration_teams.sql — recreating
+--    them here, identically, means this file no longer depends on that one
+--    having been run first.)
+-- ----------------------------------------------------------------------------
+create or replace function public.current_team_role()
+returns text
+language sql stable security definer set search_path = public as $$
+  select role from public.team_members where profile_id = auth.uid() and active = true limit 1;
+$$;
+
+create or replace function public.current_team_member_id()
+returns uuid
+language sql stable security definer set search_path = public as $$
+  select id from public.team_members where profile_id = auth.uid() and active = true limit 1;
+$$;
 
 -- ----------------------------------------------------------------------------
 -- 1. Quote follow-up tracking
